@@ -48,7 +48,27 @@ def populate_team_list(inputfile, rank):
     return output
 
 def create_matches(team_list):
-    return None
+    """ Create a schedule for the teams in the list and return it"""
+    s = []
+
+    if len(team_list) % 2 == 1: team_list.append(Team(len(team_list)+1, None, "NO GAME", 0, None))
+
+    for i in range((len(team_list)-1)*2):
+
+        mid = int(len(team_list) / 2)
+        l1 = team_list[:mid]
+        l2 = team_list[mid:]
+        l2.reverse()	
+
+        # Switch sides after each round
+        if(i % 2 == 1):
+            s = s + [ zip(l1, l2) ]
+        else:
+            s = s + [ zip(l2, l1) ]
+
+        team_list.insert(1, team_list.pop())
+
+    return s
 
 if __name__ == "__main__":
     populate_club_list("clubs.csv")
@@ -77,3 +97,13 @@ if __name__ == "__main__":
 
     match_list_1 = create_matches(team_list_1)
     match_list_2 = create_matches(team_list_2)
+
+    for matchday in match_list_1:
+        for match in matchday:
+            print(match[0].name + " - " + match[1].name)
+
+    print(' ')
+
+    for matchday in match_list_2:
+        for match in matchday:
+            print(match[0].name + " - " + match[1].name)
