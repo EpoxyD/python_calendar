@@ -1,109 +1,21 @@
 import csv
 
-club_list = []
-
-class Game:
-    def __init__(self, day, home=None, away=None):
-        self.day = day
-        self.home = home
-        self.away = away
-
-class Club:
-    def __init__(self, name, tables):
-        self.name = name
-        self.tables = tables
-
 class Team:
-    def __init__(self, index, club, name, rank, day1, day2=None):
-        self.club = club
-        self.name = name
-        self.rank = 1 if rank == 'EERSTE' else 2
-        self.day1 = day1
-        self.day2 = day2
-        self.todo = []
-        self.games = []
-        self.index = index
-    def __index__(self):
-        return self.index
+    ''' Object containing all the team data '''
 
-def populate_club_list(inputfile):
-    inputdata = open(inputfile, 'r')
-    datareader = csv.reader(inputdata, delimiter=',')
-    next(datareader)
-    for data in datareader:
-        club_list.append(Club(data[0], data[1]))
-
-def populate_team_list(inputfile, rank):
-    output = []
-    inputdata = open(inputfile, 'r')
-    datareader = csv.reader(inputdata, delimiter=',')
-    next(datareader)
-    index = 1
-    for data in datareader:
-        club = next((c for c in club_list if c.name == data[0]), None)
-        if str(data[2]) == str(rank):
-            output.append(Team(index, club, data[1], data[2], data[3], data[4]))
-            index = index + 1
-
-    return output
-
-def create_matches(team_list):
-    """ Create a schedule for the teams in the list and return it"""
-    s = []
-
-    if len(team_list) % 2 == 1: team_list.append(Team(len(team_list)+1, None, "NO GAME", 0, None))
-
-    for i in range((len(team_list)-1)*2):
-
-        mid = int(len(team_list) / 2)
-        l1 = team_list[:mid]
-        l2 = team_list[mid:]
-        l2.reverse()	
-
-        # Switch sides after each round
-        if(i % 2 == 1):
-            s = s + [ zip(l1, l2) ]
-        else:
-            s = s + [ zip(l2, l1) ]
-
-        team_list.insert(1, team_list.pop())
-
-    return s
+    def __init__(self, n="a", c="test"):
+        self.name = n
+        self.club = c
+    
+    def print(self):
+        print("{0}, {1}".format(self.name, self.club))
 
 if __name__ == "__main__":
-    populate_club_list("clubs.csv")
-    team_list_1 = populate_team_list("teams.csv", "EERSTE")
-    team_list_2 = populate_team_list("teams.csv", "ERE")
+    teamlist = set()
+    with open("teams.csv") as file:
+        reader = csv.DictReader(file)
+        for entry in reader:
+            teamlist.add(Team(entry['name'], entry['club']))
 
-    for club in club_list:
-        print('( {0.name:15}, {0.tables:2} )'.format(club))
-
-    print(' ')
-
-    for team in team_list_1:
-        if team.day2 == None:
-            print('( {0.index:2}, {0.club.name:15}, {0.club.tables:2}, {0.name:15} , {0.rank:2} , {0.day1:8} )'.format(team))
-        else:
-            print('( {0.index:2}, {0.club.name:15}, {0.club.tables:2}, {0.name:15} , {0.rank:2} , {0.day1:8} , {0.day2:8} )'.format(team))
-
-    print(' ')
-
-    for team in team_list_2:
-        if team.day2 == None:
-            print('( {0.index:2}, {0.club.name:15}, {0.club.tables:2}, {0.name:15} , {0.rank:2} , {0.day1:8} )'.format(team))
-        else:
-            print('( {0.index:2}, {0.club.name:15}, {0.club.tables:2}, {0.name:15} , {0.rank:2} , {0.day1:8} , {0.day2:8} )'.format(team))
-    
-
-    match_list_1 = create_matches(team_list_1)
-    match_list_2 = create_matches(team_list_2)
-
-    for matchday in match_list_1:
-        for match in matchday:
-            print(match[0].name + " - " + match[1].name)
-
-    print(' ')
-
-    for matchday in match_list_2:
-        for match in matchday:
-            print(match[0].name + " - " + match[1].name)
+    for team in teamlist:
+        team.print()

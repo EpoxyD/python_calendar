@@ -1,20 +1,3 @@
-club,name,rank,day1,day2
-Downtown Jack ,DTJ C ,EERSTE,Maandag,Woensdag
-Downtown Jack ,DTJ D ,EERSTE,Maandag,
-Downtown Jack ,DTJ F ,EERSTE,Woensdag,
-Shooters ,Shooters B ,EERSTE,Woensdag,
-Shooters ,Shooters C ,EERSTE,Zaterdag,Zondag
-Spacemonkeys,Spacemonkeys C,EERSTE,Woensdag,
-Spacemonkeys,Spacemonkeys D,EERSTE,Woensdag,
-Poolgate,Poolgate B ,EERSTE,Maandag,
-Bal'Enzo,Bal'Enzo B ,EERSTE,Woensdag,
-Bal'Enzo,Bal'Enzo Girls,EERSTE,Woensdag,
-Downtown Jack ,DTJ A ,ERE,Maandag,
-Downtown Jack ,DTJ B ,ERE,Maandag,
-Downtown Jack ,DTJ E ,ERE,Woensdag,
-Shooters ,Shooters A,ERE,Maandag,
-Spacemonkeys,Spacemonkeys A ,ERE,Woensdag,
-Spacemonkeys,Spacemonkeys B,ERE,Woensdag,
-Poolgate,Poolgate A ,ERE,Maandag,
-Bal'Enzo,Bal'Enzo A ,ERE,Maandag,
-Chaos,Chaos A ,ERE,Maandag,
+name,club
+name_1,club_1
+name_2,club_2
