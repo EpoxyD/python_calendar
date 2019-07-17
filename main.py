@@ -56,7 +56,24 @@ def get_teamlist_competition(all_teams, rank):
     for team in all_teams:
         if team.rank == rank:
             result.append(team)
+    if len(result) % 2:
+        result.append(Team("FREE", "FREE", rank, 1000))
     return result
+
+
+def generate_calendar(teamlist):
+    res = list()
+
+    team_1 = teamlist.pop(0)
+
+    for playday in range(0, len(teamlist)):
+        day = list()
+        day.append((team_1, teamlist[0]))
+        for i in range(1, len(teamlist), 2):
+            day.append((teamlist[i], teamlist[i+1]))
+        teamlist.append(teamlist.pop(0))  # rotate teams
+        res.append(day)
+    return res
 
 
 if __name__ == "__main__":
@@ -74,5 +91,17 @@ if __name__ == "__main__":
     random.shuffle(teamlist_1)
     random.shuffle(teamlist_2)
 
-    print(len(teamlist_1))
-    print(len(teamlist_2))
+    # Create Calendar
+    calendar_1 = generate_calendar(teamlist_1)
+    calendar_2 = generate_calendar(teamlist_2)
+
+    for day in calendar_1:
+        for value in day:
+            print("({:15},{:15})".format(value[0].getName(),value[1].getName()))
+
+
+# 1 2 3 4 5 6 (16 25 34 43 52 61)
+# 1 6 2 3 4 5 (15 23 32 46 51 64)
+# 1 5 6 2 3 4 (14 26 35 41 53 62)
+# 1 4 5 6 2 3 (13 24 31 42 56 65)
+# 1 3 4 5 6 2 (12 21 36 45 54 63)
