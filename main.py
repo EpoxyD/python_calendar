@@ -15,22 +15,32 @@ class Team:
         self.club = c
         self.name = n
         self.rank = r
-        self.tables = t
-        self.day1 = d1
-        self.day2 = d2
+        self.tables = int(t)
+        self.day = d1
 
     def print(self):
-        print("[{0}, {1}, {2}, {3}, {4}, {5}]".format(
+        print("[{0}, {1}, {2}, {3}, {4}]".format(
             self.name,
             self.club,
             self.rank,
             self.tables,
-            self.day1,
-            self.day2
+            self.day
         ))
+
+    def getClub(self):
+        return self.club
 
     def getName(self):
         return self.name
+
+    def getRank(self):
+        return self.rank
+
+    def getTables(self):
+        return self.tables
+
+    def getDay(self):
+        return self.day
 
 
 def get_teamlist(csv_file):
@@ -43,8 +53,7 @@ def get_teamlist(csv_file):
                 entry['name'],
                 entry['rank'],
                 entry['tables'],
-                entry['day1'],
-                entry['day2'],
+                entry['day'],
             ))
     return result
 
@@ -66,7 +75,7 @@ def generate_calendar(teamlist):
 
     team_1 = teamlist.pop(0)
 
-    for playday in range(0, len(teamlist)):
+    for _ in range(0, len(teamlist)):
         day = list()
         day.append((team_1, teamlist[0]))
         for i in range(1, len(teamlist), 2):
@@ -74,6 +83,52 @@ def generate_calendar(teamlist):
         teamlist.append(teamlist.pop(0))  # rotate teams
         res.append(day)
     return res
+
+
+def merge_calendars(cal_1,cal_2):
+    res = list()
+    for i in range(0,len(cal_1)):
+        res.append(cal_1[i]+cal_2[i])
+    return res
+
+
+def fix_teamlist_lengths(tl1,tl2):
+    if len(tl1) > len(tl2):
+        padding_team = Team("FREE","FREE",tl2[0][0][0].getRank(),1000)
+        nr_games = len(tl2[0])
+        padding = [[padding_team,padding_team] for _ in range(nr_games)]
+        tl2.append(padding)
+        tl2.append(padding)
+    if len(tl1) < len(tl2):
+        padding_team = Team("FREE","FREE",tl1[0][0][0].getRank(),1000)
+        nr_games = len(tl1[0])
+        padding = [[padding_team,padding_team] for _ in range(nr_games)]
+        tl1.append(padding)
+        tl1.append(padding)
+    return
+
+
+def check_constraints(cal):
+    res = dict()
+    for playday in cal:
+        for match in playday:
+            res[match[0].getClub()] = dict()
+            res[match[0].getClub()][match[0].getDay()] = dict()
+            tmp = res[match[0].getClub()][match[0].getDay()] 
+            if "current" in tmp:
+                tmp["current"] += 1
+            else:
+                tmp["current"] = 1
+            if not "total" in tmp:
+                tmp["total"] = match[0].getTables()
+    
+    for _,club in res.items():
+        for _,day in club.items():
+            if day["current"] * 2 >= day["total"]:
+                return True
+    
+    return False
+            
 
 
 if __name__ == "__main__":
@@ -91,13 +146,30 @@ if __name__ == "__main__":
     random.shuffle(teamlist_1)
     random.shuffle(teamlist_2)
 
-    # Create Calendar
-    calendar_1 = generate_calendar(teamlist_1)
-    calendar_2 = generate_calendar(teamlist_2)
+    constraints = True
+    while(constraints):
+        # Create Calendar
+        calendar_1 = generate_calendar(teamlist_1)
+        calendar_2 = generate_calendar(teamlist_2)
+        
+        # Make the calendars equal in length
+        fix_teamlist_lengths(calendar_1,calendar_2)
 
-    for day in calendar_1:
-        for value in day:
-            print("({:15},{:15})".format(value[0].getName(),value[1].getName()))
+        # Merge Two Calendars
+        calendar = merge_calendars(calendar_1,calendar_2)
+        del calendar_1
+        del calendar_2
+
+        constraints = check_constraints(calendar)
+
+    for speelweek in calendar:
+        for value in speelweek:
+            print("({:15},{:15},{:8})".format(value[0].getName(),value[1].getName(), value[0].getRank()))
+        print()
+
+    # TODO constraints
+    # Tafels thuisploegen mogen maximum niet overlappen
+    # 
 
 
 # 1 2 3 4 5 6 (16 25 34 43 52 61)
