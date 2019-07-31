@@ -77,15 +77,17 @@ def generate_calendar(teamlist):
 
     for i in range(0, len(teamlist)):
         day = list()
-        if i%2:
-            day.append((team_1, teamlist[0]))
-        else:
-            day.append((teamlist[0], team_1))
+        day.append((team_1, teamlist[0]))
         for i in range(1, len(teamlist), 2):
             day.append((teamlist[i], teamlist[i+1]))
         teamlist.append(teamlist.pop(0))  # rotate teams
         res.append(day)
     teamlist.append(team_1)
+
+    for team in teamlist:
+        team.print()
+    print()
+
     return res
 
 
@@ -149,8 +151,8 @@ def print_matchweeks(cal):
     nr_weeks = len(cal)
     rank = cal[0][0][0].getRank()
 
-    for i in range(1,nr_weeks):
-        print("|--- WEEK {:2} - {:6} -------------------------------------------------------------|".format(i,rank))
+    for i in range(0,nr_weeks):
+        print("|--- WEEK {:2} - {:6} -------------------------------------------------------------|".format(i+1,rank))
         for day in cal[i]:
             print("| {:10} | {:20} VS {:20} @ {:20} |".format(
                 day[0].getDay(),
@@ -163,10 +165,10 @@ def print_matchweeks(cal):
     print()
 
 
-    # for speelweek in calendar:
-    #     for value in speelweek:
-    #         print("({:15},{:15},{:8})".format(value[0].getName(),value[1].getName(), value[0].getRank()))
-    #     print()
+    for speelweek in calendar:
+        for value in speelweek:
+            print("({:20},{:20},{:8})".format(value[0].getName(),value[1].getName(), value[0].getRank()))
+        print()
 
 
 def populate_constraints_list(teamlist):
@@ -192,7 +194,7 @@ def populate_constraints_list(teamlist):
 
 if __name__ == "__main__":
     # Get all teams from csv file
-    teamlist = get_teamlist("teams.csv")
+    teamlist = get_teamlist("copy.csv")
 
     # Populate Constraints list
     populate_constraints_list(teamlist)
@@ -209,6 +211,9 @@ if __name__ == "__main__":
     while(not_done_yet):
         attempts += 1
 
+        if attempts > 3:
+            break
+
         # Randomnize teamlist
         random.shuffle(teamlist_1)
         random.shuffle(teamlist_2)
@@ -223,7 +228,7 @@ if __name__ == "__main__":
         # Merge Two Calendars
         calendar = merge_calendars(calendar_1,calendar_2)
 
-        not_done_yet = check_constraints(calendar)
+        not_done_yet = True #check_constraints(calendar)
 
     print_header()
     print_matchweeks(calendar_1)
