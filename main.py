@@ -202,7 +202,7 @@ def generate_output(cal):
         for i in range(len(cal)):
             for game in cal[i]:
                 writer.writerow({
-                    'week' : str(i),
+                    'week' : str(i+1),
                     'day': game[0].getDay(),
                     'comp': game[0].getRank(),
                     'team1': game[0].getName(),
