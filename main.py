@@ -1,5 +1,6 @@
 import csv
 import random
+import os
 
 constraints_list = dict()
 
@@ -185,6 +186,30 @@ def populate_constraints_list(teamlist):
     constraints_list['MAANDAG']['FREE']['total'] = 1000
 
 
+def remove_old_output(file):
+    if os.path.exists(file):
+        os.remove(file)
+    
+    with open('new_calendar.csv','w', newline='') as file:
+        fieldnames = ['week','day','comp','team1','team2','location']
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+
+def generate_output(cal):
+    with open('new_calendar.csv','a', newline='') as file:
+        fieldnames = ['week','day','comp','team1','team2','location']
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        for i in range(len(cal)):
+            for game in cal[i]:
+                writer.writerow({
+                    'week' : str(i),
+                    'day': game[0].getDay(),
+                    'comp': game[0].getRank(),
+                    'team1': game[0].getName(),
+                    'team2': game[1].getName(),
+                    'location': game[0].getClub()
+                })
+
 if __name__ == "__main__":
     # Get all teams from csv file
     teamlist = get_teamlist("teams.csv")
@@ -223,6 +248,11 @@ if __name__ == "__main__":
     print_header()
     print_matchweeks(calendar_1)
     print_matchweeks(calendar_2)
+
+    remove_old_output('output.csv')
+
+    generate_output(calendar_1)
+    generate_output(calendar_2)
 
     print("NR OF ATTEMPTS = {}".format(attempts))
 
