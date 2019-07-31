@@ -1,19 +1,19 @@
-club,name,rank,tables,day,
-Downtown Jack,DTJ C,EERSTE,4,Maandag
-Downtown Jack,DTJ D,EERSTE,4,Maandag
-Downtown Jack,DTJ F,EERSTE,4,Woensdag
-Shooters,Shooters B,EERSTE,2,Woensdag
-Spacemonkeys,Spacemonkeys C,EERSTE,4,Woensdag
-Spacemonkeys,Spacemonkeys D,EERSTE,4,Woensdag
-Poolgate,Poolgate B,EERSTE,2,Maandag
-Bal'Enzo,Bal'Enzo B,EERSTE,2,Woensdag
-Bal'Enzo,Bal'Enzo Girls,EERSTE,2,Woensdag
-Downtown Jack,DTJ A,ERE,4,Maandag
-Downtown Jack,DTJ B,ERE,4,Maandag
-Downtown Jack,DTJ E,ERE,4,Woensdag
-Shooters,Shooters A,ERE,2,Maandag
-Spacemonkeys,Spacemonkeys A,ERE,4,Woensdag
-Spacemonkeys,Spacemonkeys B,ERE,4,Woensdag
-Poolgate,Poolgate A,ERE,2,Maandag
-Bal'Enzo,Bal'Enzo A,ERE,2,Maandag
-Chaos,Chaos A,ERE,2,Maandag
+club,name,rank,games,day
+Beerzelberg,BCB Spacemonkeys B,ERE,1,WOENSDAG
+Beerzelberg,BCB Spacemonkeys D,EERSTE,1,WOENSDAG
+Kosmonaut,BCB Spacemonkeys A,ERE,1,WOENSDAG
+Kosmonaut,BCB Spacemonkeys C,EERSTE,1,WOENSDAG
+Poolgate,Poolgate A,ERE,1,MAANDAG
+Downtown Jack,Downtown Jack A,ERE,2,MAANDAG
+Downtown Jack,Downtown Jack B,ERE,2,MAANDAG
+Downtown Jack,Downtown Jack C,EERSTE,2,MAANDAG
+Downtown Jack,Downtown Jack D,EERSTE,2,MAANDAG
+Downtown Jack,Downtown Jack E,ERE,2,WOENSDAG
+Downtown Jack,Downtown Jack F,ERE,2,WOENSDAG
+Downtown Jack,Downtown Jack G,EERSTE,2,WOENSDAG
+Shooters,Shooters A,ERE,1,WOENSDAG
+Shooters,Shooters B,EERSTE,1,WOENSDAG
+Shooters,Shooters J,EERSTE,1,ZATERDAG
+Bal'Enzo,Bal'Enzo A,ERE,1,MAANDAG
+Bal'Enzo,Bal'Enzo Stars,EERSTE,1,MAANDAG
+Bal'Enzo,Bal'Enco,EERSTE,1,WOENSDAG

@@ -1,6 +1,7 @@
 import csv
 import random
 
+constraints_list = dict()
 
 class Team:
     ''' Object containing all the team data '''
@@ -10,12 +11,11 @@ class Team:
                  n=None,
                  r="EERSTE",
                  t=2,
-                 d1="Maandag",
-                 d2=None):
+                 d1="MAANDAG"):
         self.club = c
         self.name = n
         self.rank = r
-        self.tables = int(t)
+        self.games = int(t)
         self.day = d1
 
     def print(self):
@@ -23,7 +23,7 @@ class Team:
             self.name,
             self.club,
             self.rank,
-            self.tables,
+            self.games,
             self.day
         ))
 
@@ -36,8 +36,8 @@ class Team:
     def getRank(self):
         return self.rank
 
-    def getTables(self):
-        return self.tables
+    def getGames(self):
+        return self.games
 
     def getDay(self):
         return self.day
@@ -52,7 +52,7 @@ def get_teamlist(csv_file):
                 entry['club'],
                 entry['name'],
                 entry['rank'],
-                entry['tables'],
+                entry['games'],
                 entry['day'],
             ))
     return result
@@ -75,13 +75,17 @@ def generate_calendar(teamlist):
 
     team_1 = teamlist.pop(0)
 
-    for _ in range(0, len(teamlist)):
+    for i in range(0, len(teamlist)):
         day = list()
-        day.append((team_1, teamlist[0]))
+        if i%2:
+            day.append((team_1, teamlist[0]))
+        else:
+            day.append((teamlist[0], team_1))
         for i in range(1, len(teamlist), 2):
             day.append((teamlist[i], teamlist[i+1]))
         teamlist.append(teamlist.pop(0))  # rotate teams
         res.append(day)
+    teamlist.append(team_1)
     return res
 
 
@@ -109,31 +113,89 @@ def fix_teamlist_lengths(tl1,tl2):
 
 
 def check_constraints(cal):
-    res = dict()
-    for playday in cal:
-        for match in playday:
-            res[match[0].getClub()] = dict()
-            res[match[0].getClub()][match[0].getDay()] = dict()
-            tmp = res[match[0].getClub()][match[0].getDay()] 
-            if "current" in tmp:
-                tmp["current"] += 1
-            else:
-                tmp["current"] = 1
-            if not "total" in tmp:
-                tmp["total"] = match[0].getTables()
-    
-    for _,club in res.items():
-        for _,day in club.items():
-            if day["current"] * 2 >= day["total"]:
-                return True
-    
-    return False
-            
+    ret = False
+    global check_constraints
+    for week in range(1,len(cal)):
+        for game in cal[week]:
+            day = game[0].getDay()
+            club = game[0].getClub()
+            if game[1].getName() != 'FREE':
+                constraints_list[day][club]['games'] += 1
+
+        for d,day in constraints_list.items():
+            for k,club in day.items():
+                if club['games'] > club['total']:
+                    # print("DAY {:1}: ISSUE WITH: {:8},{:16} | GAMES: {:1}, TOTAL: {:1}".format(week,d,k,club['games'],club['total']))
+                    ret =  True
+                club['games'] = 0
+
+    return ret
+
+
+def print_header():
+    print('''
+         _____               _    _____        _                   _
+        |  __ \             | |  / ____|      | |                 | |
+        | |__) |___    ___  | | | |      __ _ | |  ___  _ __    __| |  __ _  _ __
+        |  ___// _ \  / _ \ | | | |     / _` || | / _ \| '_ \  / _` | / _` || '__|
+        | |   | (_) || (_) || | | |____| (_| || ||  __/| | | || (_| || (_| || |
+        |_|    \___/  \___/ |_|  \_____|\__,_||_| \___||_| |_| \__,_| \__,_||_|
+
+                By Evert B.
+    ''')
+
+
+def print_matchweeks(cal):
+    nr_weeks = len(cal)
+    rank = cal[0][0][0].getRank()
+
+    for i in range(1,nr_weeks):
+        print("|--- WEEK {:2} - {:6} -------------------------------------------------------------|".format(i,rank))
+        for day in cal[i]:
+            print("| {:10} | {:20} VS {:20} @ {:20} |".format(
+                day[0].getDay(),
+                day[0].getName(),
+                day[1].getName(),
+                day[0].getClub()
+            ))
+        print("|----------------------------------------------------------------------------------|".format(i))
+        print()
+    print()
+
+
+    # for speelweek in calendar:
+    #     for value in speelweek:
+    #         print("({:15},{:15},{:8})".format(value[0].getName(),value[1].getName(), value[0].getRank()))
+    #     print()
+
+
+def populate_constraints_list(teamlist):
+    for team in teamlist:
+        day  = team.getDay()
+        club = team.getClub()
+
+        if not day in constraints_list:
+            constraints_list[day] = dict()
+
+        if not club in constraints_list[day]:
+            constraints_list[day][club] = dict()
+
+        constraints_list[day][club]['games'] = 0
+        constraints_list[day][club]['total'] = int(team.getGames())
+
+    if not 'MAANDAG' in constraints_list:
+        constraints_list['MAANDAG'] = dict()
+    constraints_list['MAANDAG']['FREE'] = dict()
+    constraints_list['MAANDAG']['FREE']['games'] = 0
+    constraints_list['MAANDAG']['FREE']['total'] = 1000
 
 
 if __name__ == "__main__":
     # Get all teams from csv file
     teamlist = get_teamlist("teams.csv")
+
+    # Populate Constraints list
+    populate_constraints_list(teamlist)
 
     # Get list per ranking
     teamlist_1 = get_teamlist_competition(teamlist, "ERE")
@@ -142,34 +204,33 @@ if __name__ == "__main__":
     # Remove full teamlist from memory
     del teamlist
 
-    # Randomnize teamlist
-    random.shuffle(teamlist_1)
-    random.shuffle(teamlist_2)
+    attempts = 0
+    not_done_yet = True
+    while(not_done_yet):
+        attempts += 1
 
-    constraints = True
-    while(constraints):
+        # Randomnize teamlist
+        random.shuffle(teamlist_1)
+        random.shuffle(teamlist_2)
+
         # Create Calendar
         calendar_1 = generate_calendar(teamlist_1)
         calendar_2 = generate_calendar(teamlist_2)
-        
+
         # Make the calendars equal in length
         fix_teamlist_lengths(calendar_1,calendar_2)
 
         # Merge Two Calendars
         calendar = merge_calendars(calendar_1,calendar_2)
-        del calendar_1
-        del calendar_2
 
-        constraints = check_constraints(calendar)
+        not_done_yet = check_constraints(calendar)
 
-    for speelweek in calendar:
-        for value in speelweek:
-            print("({:15},{:15},{:8})".format(value[0].getName(),value[1].getName(), value[0].getRank()))
-        print()
+    print_header()
+    print_matchweeks(calendar_1)
+    print_matchweeks(calendar_2)
 
-    # TODO constraints
-    # Tafels thuisploegen mogen maximum niet overlappen
-    # 
+    print("NR OF ATTEMPTS = {}".format(attempts))
+
 
 
 # 1 2 3 4 5 6 (16 25 34 43 52 61)
