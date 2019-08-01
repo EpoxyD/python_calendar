@@ -72,18 +72,26 @@ def get_teamlist_competition(all_teams, rank):
 
 
 def generate_calendar(teamlist):
-    res = list()
-    nr_teams = len(teamlist)
-    for _ in range(1,nr_teams):
-        day = list()
-        home = teamlist[0:int(nr_teams/2)]
-        away = teamlist[int(nr_teams/2):]
-        for i in range(len(home)):
-            day.append((home[i],away[-i]))
-        res.append(day)
-        teamlist.insert(1,teamlist.pop(-1))
-    return res
-    
+    result = list()
+    tll = len(teamlist)
+    for i in range(1,tll):
+        day_1 = list()
+        day_2 = list()
+        home = teamlist[:tll//2]
+        away = teamlist[tll//2:]
+        for j in range(len(home)):
+            if i%2 == 0:
+                day_1.append((home[j], away[-j]))
+                day_2.append((away[-j], home[j]))
+            else:
+                day_1.append((away[-j], home[j]))
+                day_2.append((home[j], away[-j]))
+
+        result.append(day_1)
+        result.insert(len(result)//2,day_2)
+        teamlist.insert(1, teamlist.pop(-1))
+    return result
+
     # 1 2 3 4 5 6 (16 25 34 43 52 61)
     # 1 6 2 3 4 5 (15 23 32 46 51 64)
     # 1 5 6 2 3 4 (14 26 35 41 53 62)
@@ -189,7 +197,7 @@ def populate_constraints_list(teamlist):
 def remove_old_output(file):
     if os.path.exists(file):
         os.remove(file)
-    
+
     with open('new_calendar.csv','w', newline='') as file:
         fieldnames = ['week','day','comp','team1','team2','location']
         writer = csv.DictWriter(file, fieldnames=fieldnames)
