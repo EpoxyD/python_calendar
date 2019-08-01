@@ -45,6 +45,29 @@ class Team:
         return self.day
 
 
+# Print iterations progress
+def printProgressBar(iteration, total, prefix='', suffix='', decimals=1, length=100, fill='█'):
+    """
+    Call in a loop to create terminal progress bar
+    @params:
+        iteration   - Required  : current iteration (Int)
+        total       - Required  : total iterations (Int)
+        prefix      - Optional  : prefix string (Str)
+        suffix      - Optional  : suffix string (Str)
+        decimals    - Optional  : positive number of decimals in percent complete (Int)
+        length      - Optional  : character length of bar (Int)
+        fill        - Optional  : bar fill character (Str)
+    """
+    percent = ("{0:." + str(decimals) + "f}").format(100 *
+                                                     (iteration / float(total)))
+    filledLength = int(length * iteration // total)
+    bar = fill * filledLength + '-' * (length - filledLength)
+    print('\r%s |%s| %s%% %s' % (prefix, bar, percent, suffix), end='\r')
+    # Print New Line on Complete
+    if iteration == total:
+        print()
+
+
 def get_teamlist(csv_file):
     result = list()
     with open(csv_file) as file:
@@ -238,6 +261,8 @@ if __name__ == "__main__":
 
     attempts = 0
     not_done_yet = True
+    max_tries = 250000
+    printProgressBar(attempts, max_tries, prefix = 'Progress:', suffix = '')
     while(not_done_yet):
         attempts += 1
 
@@ -256,6 +281,16 @@ if __name__ == "__main__":
         calendar = merge_calendars(calendar_1, calendar_2)
 
         not_done_yet = check_constraints(calendar)
+
+        printProgressBar(attempts, max_tries, prefix = 'Progress:', suffix = '')
+
+        if attempts == max_tries:
+            print("Failed to find suitable calendar within 250.000 tries.")
+            print("Are the constraints too strict?")
+            exit
+
+
+    printProgressBar(max_tries, max_tries, prefix = 'Progress:', suffix = '')
 
     print_header()
     print_matchweeks(calendar_1)
