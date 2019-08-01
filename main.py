@@ -4,6 +4,7 @@ import os
 
 constraints_list = dict()
 
+
 class Team:
     ''' Object containing all the team data '''
 
@@ -19,7 +20,7 @@ class Team:
         self.games = int(t)
         self.day = d1
 
-    def print(self):
+    def dump(self):
         print("[{0}, {1}, {2}, {3}, {4}]".format(
             self.name,
             self.club,
@@ -74,13 +75,13 @@ def get_teamlist_competition(all_teams, rank):
 def generate_calendar(teamlist):
     result = list()
     tll = len(teamlist)
-    for i in range(1,tll):
+    for i in range(1, tll):
         day_1 = list()
         day_2 = list()
         home = teamlist[:tll//2]
         away = teamlist[tll//2:]
         for j in range(len(home)):
-            if i%2 == 0:
+            if i % 2 == 0:
                 day_1.append((home[j], away[-j]))
                 day_2.append((away[-j], home[j]))
             else:
@@ -88,7 +89,7 @@ def generate_calendar(teamlist):
                 day_2.append((home[j], away[-j]))
 
         result.append(day_1)
-        result.insert(len(result)//2,day_2)
+        result.insert(len(result)//2, day_2)
         teamlist.insert(1, teamlist.pop(-1))
     return result
 
@@ -99,24 +100,24 @@ def generate_calendar(teamlist):
     # 1 3 4 5 6 2 (12 21 36 45 54 63)
 
 
-def merge_calendars(cal_1,cal_2):
+def merge_calendars(cal_1, cal_2):
     res = list()
-    for i in range(0,len(cal_1)):
+    for i in range(0, len(cal_1)):
         res.append(cal_1[i]+cal_2[i])
     return res
 
 
-def fix_teamlist_lengths(tl1,tl2):
+def fix_teamlist_lengths(tl1, tl2):
     if len(tl1) > len(tl2):
-        padding_team = Team("FREE","FREE",tl2[0][0][0].getRank(),1000)
+        padding_team = Team("FREE", "FREE", tl2[0][0][0].getRank(), 1000)
         nr_games = len(tl2[0])
-        padding = [[padding_team,padding_team] for _ in range(nr_games)]
+        padding = [[padding_team, padding_team] for _ in range(nr_games)]
         tl2.append(padding)
         tl2.append(padding)
     if len(tl1) < len(tl2):
-        padding_team = Team("FREE","FREE",tl1[0][0][0].getRank(),1000)
+        padding_team = Team("FREE", "FREE", tl1[0][0][0].getRank(), 1000)
         nr_games = len(tl1[0])
-        padding = [[padding_team,padding_team] for _ in range(nr_games)]
+        padding = [[padding_team, padding_team] for _ in range(nr_games)]
         tl1.append(padding)
         tl1.append(padding)
     return
@@ -125,18 +126,18 @@ def fix_teamlist_lengths(tl1,tl2):
 def check_constraints(cal):
     ret = False
     global check_constraints
-    for week in range(1,len(cal)):
+    for week in range(1, len(cal)):
         for game in cal[week]:
             day = game[0].getDay()
             club = game[0].getClub()
             if game[1].getName() != 'FREE':
                 constraints_list[day][club]['games'] += 1
 
-        for d,day in constraints_list.items():
-            for k,club in day.items():
+        for d, day in constraints_list.items():
+            for k, club in day.items():
                 if club['games'] > club['total']:
                     # print("DAY {:1}: ISSUE WITH: {:8},{:16} | GAMES: {:1}, TOTAL: {:1}".format(week,d,k,club['games'],club['total']))
-                    ret =  True
+                    ret = True
                 club['games'] = 0
 
     return ret
@@ -159,8 +160,9 @@ def print_matchweeks(cal):
     nr_weeks = len(cal)
     rank = cal[0][0][0].getRank()
 
-    for i in range(0,nr_weeks):
-        print("|--- WEEK {:2} - {:6} -------------------------------------------------------------|".format(i+1,rank))
+    for i in range(0, nr_weeks):
+        print(
+            "|--- WEEK {:2} - {:6} -------------------------------------------------------------|".format(i+1, rank))
         for day in cal[i]:
             print("| {:10} | {:20} VS {:20} @ {:20} |".format(
                 day[0].getDay(),
@@ -175,7 +177,7 @@ def print_matchweeks(cal):
 
 def populate_constraints_list(teamlist):
     for team in teamlist:
-        day  = team.getDay()
+        day = team.getDay()
         club = team.getClub()
 
         if not day in constraints_list:
@@ -198,25 +200,27 @@ def remove_old_output(file):
     if os.path.exists(file):
         os.remove(file)
 
-    with open('new_calendar.csv','w', newline='') as file:
-        fieldnames = ['week','day','comp','team1','team2','location']
+    with open('new_calendar.csv', 'w', newline='') as file:
+        fieldnames = ['week', 'day', 'comp', 'team1', 'team2', 'location']
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         writer.writeheader()
 
+
 def generate_output(cal):
-    with open('new_calendar.csv','a', newline='') as file:
-        fieldnames = ['week','day','comp','team1','team2','location']
+    with open('new_calendar.csv', 'a', newline='') as file:
+        fieldnames = ['week', 'day', 'comp', 'team1', 'team2', 'location']
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         for i in range(len(cal)):
             for game in cal[i]:
                 writer.writerow({
-                    'week' : str(i+1),
+                    'week': str(i+1),
                     'day': game[0].getDay(),
                     'comp': game[0].getRank(),
                     'team1': game[0].getName(),
                     'team2': game[1].getName(),
                     'location': game[0].getClub()
                 })
+
 
 if __name__ == "__main__":
     # Get all teams from csv file
@@ -246,10 +250,10 @@ if __name__ == "__main__":
         calendar_2 = generate_calendar(teamlist_2)
 
         # Make the calendars equal in length
-        fix_teamlist_lengths(calendar_1,calendar_2)
+        fix_teamlist_lengths(calendar_1, calendar_2)
 
         # Merge Two Calendars
-        calendar = merge_calendars(calendar_1,calendar_2)
+        calendar = merge_calendars(calendar_1, calendar_2)
 
         not_done_yet = check_constraints(calendar)
 
@@ -263,4 +267,3 @@ if __name__ == "__main__":
     generate_output(calendar_2)
 
     print("NR OF ATTEMPTS = {}".format(attempts))
-
