@@ -223,14 +223,14 @@ def remove_old_output(file):
     if os.path.exists(file):
         os.remove(file)
 
-    with open('output/new_calendar.csv', 'w', newline='') as file:
+    with open('new_calendar.csv', 'w', newline='') as file:
         fieldnames = ['week', 'day', 'comp', 'team1', 'team2', 'location']
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         writer.writeheader()
 
 
 def generate_output(cal):
-    with open('output/new_calendar.csv', 'a', newline='') as file:
+    with open('new_calendar.csv', 'a', newline='') as file:
         fieldnames = ['week', 'day', 'comp', 'team1', 'team2', 'location']
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         for i in range(len(cal)):
@@ -247,7 +247,7 @@ def generate_output(cal):
 
 if __name__ == "__main__":
     # Get all teams from csv file
-    teamlist = get_teamlist("input/teams.csv")
+    teamlist = get_teamlist("teams.csv")
 
     # Populate Constraints list
     populate_constraints_list(teamlist)
@@ -287,7 +287,7 @@ if __name__ == "__main__":
         if attempts == max_tries:
             print("Failed to find suitable calendar within 250.000 tries.")
             print("Are the constraints too strict?")
-            exit
+            raise SystemExit
 
 
     printProgressBar(max_tries, max_tries, prefix = 'Progress:', suffix = '')
