@@ -1,54 +1,36 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/python
 
-jobs:
+strategy:
+  matrix:
+    linux:
+      imageName: "ubuntu-16.04"
+      variables:
+        binary: PoolCalendar
+    mac:
+      imageName: "macos-10.13"
+      variables:
+        binary: PoolCalendar
+    windows:
+      imageName: "vs2017-win2016"
+      variables:
+        binary: PoolCalendar.exe
+  maxParallel: 3
 
-- job: 'Linux'
-  pool:
-    vmImage: 'ubuntu-16.04'
-
+pool:
+  vmImage: $(imageName)
+      
+stages:
+- stage: "dependencies"
+  displayName: "Install dependencies"
   steps:
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '3.6'
-
   - script: pip3 install -r requirements.txt
-    displayName: 'Install requirements'
 
-  - script: |
-      make
-      ls -lah
-    displayName: 'Build binary'
-
-- job: 'Windows'
-  pool:
-    vmImage: 'vs2017-win2016'
-
+- stage: "binary"
+  displayName: "Build Binary"
   steps:
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '3.6'
+  - script: make
 
-  - script: pip3 install -r requirements.txt
-    displayName: 'Install requirements'
-
-  - script: |
-      make
-      dir
-    displayName: 'Build binary'
-
-- job: 'Apple'
-  pool:
-    vmImage: 'macOS-10.13'
-
+- stage: "testing"
+  displayName: "Test run Binary"
   steps:
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '3.6'
-
-  - script: pip3 install -r requirements.txt
-    displayName: 'Install requirements'
-
-  - script: |
-      make
-      ls -lah
-    displayName: 'Build binary'
+  - script: ./$(binary)
