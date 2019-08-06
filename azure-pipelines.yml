@@ -14,6 +14,11 @@ jobs:
   - script: pip3 install -r requirements.txt
     displayName: 'Install requirements'
 
+  - script: |
+      make
+      ls -lah
+    displayName: 'Build binary'
+
 - job: 'Windows'
   pool:
     vmImage: 'vs2017-win2016'
@@ -26,6 +31,11 @@ jobs:
   - script: pip3 install -r requirements.txt
     displayName: 'Install requirements'
 
+  - script: |
+      make
+      dir
+    displayName: 'Build binary'
+
 - job: 'Apple'
   pool:
     vmImage: 'macOS-10.13'
@@ -37,3 +47,8 @@ jobs:
 
   - script: pip3 install -r requirements.txt
     displayName: 'Install requirements'
+
+  - script: |
+      make
+      ls -lah
+    displayName: 'Build binary'
