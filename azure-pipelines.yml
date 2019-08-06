@@ -10,11 +10,7 @@ jobs:
   - script: |
       python3 -m pip install --upgrade pip
       python3 -m pip install -r requirements.txt
-  - script: |
-      pylint -j0 src/*.py
-  - script: |
-      pytest --junitxml=results.xml
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFiles: 'results.xml'
-      testRunTitle: "$(Agent.OS) - $(Build.BuildNumber)[$(Agent.JobName)] - Python $(python.version)"
+  - script: pylint -j0 --errors-only src/*.py
+  - script: pytest --junitxml=results.xml
+  - script: make
+  - script: ./Poolcalendar
