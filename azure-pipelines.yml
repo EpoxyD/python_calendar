@@ -1,36 +1,47 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/python
-
-strategy:
-  matrix:
-    linux:
-      imageName: "ubuntu-16.04"
-      variables:
-        binary: PoolCalendar
-    mac:
-      imageName: "macos-10.13"
-      variables:
-        binary: PoolCalendar
-    windows:
-      imageName: "vs2017-win2016"
-      variables:
-        binary: PoolCalendar.exe
-  maxParallel: 3
-
-pool:
-  vmImage: $(imageName)
       
-stages:
-- stage: "dependencies"
-  displayName: "Install dependencies"
+jobs:
+- job: dependencies
+  displayName: Install dependencies
   steps:
   - script: pip3 install -r requirements.txt
 
-- stage: "binary"
-  displayName: "Build Binary"
+- job: binary
+  strategy:
+    matrix:
+      linux:
+        imageName: "ubuntu-16.04"
+        binary: PoolCalendar
+      mac:
+        imageName: "macos-10.13"
+        binary: PoolCalendar
+      windows:
+        imageName: "vs2017-win2016"
+        binary: PoolCalendar.exe
+    maxParallel: 3
+  pool:
+    vmImage: $(imageName)
+  displayName: Build Binary
+  dependsOn: dependencies
   steps:
   - script: make
 
-- stage: "testing"
-  displayName: "Test run Binary"
+- job: testing
+  strategy:
+    matrix:
+      linux:
+        imageName: "ubuntu-16.04"
+        binary: PoolCalendar
+      mac:
+        imageName: "macos-10.13"
+        binary: PoolCalendar
+      windows:
+        imageName: "vs2017-win2016"
+        binary: PoolCalendar.exe
+    maxParallel: 3
+  pool:
+    vmImage: $(imageName)
+  dependsOn: binary
+  displayName: Test run Binary
   steps:
   - script: ./$(binary)
