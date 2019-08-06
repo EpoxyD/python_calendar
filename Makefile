@@ -7,6 +7,7 @@ all :
 ifeq ($(OS),Windows_NT)
 	@RD /S/Q build > nul 2>&1
 	@DEL /F/S/Q $(COMPONENT).spec > nul 2>&1
+	@MV $(COMPONENT).exe $(COMPONENT)
 else
 	@rm -rf build $(COMPONENT).spec
 endif
