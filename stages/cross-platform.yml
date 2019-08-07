@@ -11,7 +11,10 @@ stages:
       vmImage: ${{ parameters.platform }}
     steps:
     - task: UsePythonVersion@0
+      displayName: Set Python version to 3.7
       inputs:
         versionSpec: '3.7'
     - bash: pip3 install -r requirements.txt
+      displayName: Install Requirements
     - bash: make
+      displayName: Make Binary

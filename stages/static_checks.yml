@@ -10,3 +10,4 @@ stages:
     - bash: |
         pip3 install pylint
         pylint src/*.py
+      displayName: PyLint
