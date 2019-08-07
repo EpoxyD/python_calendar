@@ -15,3 +15,5 @@ stages:
   parameters:
     name: Linux
     platform: ubuntu-latest
+
+- template: stages/upload-releases.yml
