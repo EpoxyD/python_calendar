@@ -1,13 +1,16 @@
+''' PoolCalendar Generator '''
+
 import csv
 import random
 import os
 
-constraints_list = dict()
+CONSTRAINTS_LIST = dict()
 
 
 class Team:
     ''' Object containing all the team data '''
 
+    #pylint: disable-msg=too-many-arguments
     def __init__(self,
                  c=None,
                  n=None,
@@ -21,6 +24,7 @@ class Team:
         self.day = d1
 
     def dump(self):
+        ''' dump the Team data '''
         print("[{0}, {1}, {2}, {3}, {4}]".format(
             self.name,
             self.club,
@@ -29,25 +33,31 @@ class Team:
             self.day
         ))
 
-    def getClub(self):
+    def get_club(self):
+        ''' get Team Club '''
         return self.club
 
-    def getName(self):
+    def get_name(self):
+        ''' get Team Name '''
         return self.name
 
-    def getRank(self):
+    def get_rank(self):
+        ''' get Team Rank '''
         return self.rank
 
-    def getGames(self):
+    def get_games(self):
+        ''' get Team Games '''
         return self.games
 
-    def getDay(self):
+    def get_day(self):
+        ''' get Team Day '''
         return self.day
 
 
 # Print iterations progress
-def printProgressBar(iteration, total, prefix='', suffix='', decimals=1, length=100, fill='█'):
-    """
+#pylint: disable-msg=too-many-arguments
+def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, length=100, fill='█'):
+    '''
     Call in a loop to create terminal progress bar
     @params:
         iteration   - Required  : current iteration (Int)
@@ -56,19 +66,24 @@ def printProgressBar(iteration, total, prefix='', suffix='', decimals=1, length=
         suffix      - Optional  : suffix string (Str)
         decimals    - Optional  : positive number of decimals in percent complete (Int)
         length      - Optional  : character length of bar (Int)
-        fill        - Optional  : bar fill character (Str)
-    """
+        fill        - Optional  : barline fill character (Str)
+    '''
     percent = ("{0:." + str(decimals) + "f}").format(100 *
                                                      (iteration / float(total)))
-    filledLength = int(length * iteration // total)
-    bar = fill * filledLength + '-' * (length - filledLength)
-    print('\r%s |%s| %s%% %s' % (prefix, bar, percent, suffix), end='\r')
+    filled_length = int(length * iteration // total)
+    barline = fill * filled_length + '-' * (length - filled_length)
+    print('\r%s |%s| %s%% %s' % (prefix, barline, percent, suffix), end='\r')
     # Print New Line on Complete
     if iteration == total:
         print()
 
 
 def get_teamlist(csv_file):
+    '''
+    @brief: return all teams in the defined csv file
+    @params:
+        csv_file: a csv file with headers containing all participating teams
+    '''
     result = list()
     with open(csv_file) as file:
         reader = csv.DictReader(file)
@@ -84,7 +99,12 @@ def get_teamlist(csv_file):
 
 
 def get_teamlist_competition(all_teams, rank):
-    ''' return a subset of all teams containing only those with the specified rank '''
+    '''
+    @brief: return a subset of all teams containing only those with the specified rank
+    @params:
+        all_teams   a list of all teams accross competitions
+        rank        the competition we want a subset of
+    '''
 
     result = list()
     for team in all_teams:
@@ -96,6 +116,11 @@ def get_teamlist_competition(all_teams, rank):
 
 
 def generate_calendar(teamlist):
+    '''
+    @brief: Generate a calendar for a particular rank
+    @params:
+        teamlist    list of the teams in the competition
+    '''
     result = list()
     tll = len(teamlist)
     for i in range(1, tll):
@@ -103,7 +128,7 @@ def generate_calendar(teamlist):
         day_2 = list()
         home = teamlist[:tll//2]
         away = teamlist[tll//2:]
-        for j in range(len(home)):
+        for j in enumerate(home):
             if i % 2 == 0:
                 day_1.append((home[j], away[-j]))
                 day_2.append((away[-j], home[j]))
@@ -116,50 +141,58 @@ def generate_calendar(teamlist):
         teamlist.insert(1, teamlist.pop(-1))
     return result
 
-    # 1 2 3 4 5 6 (16 25 34 43 52 61)
-    # 1 6 2 3 4 5 (15 23 32 46 51 64)
-    # 1 5 6 2 3 4 (14 26 35 41 53 62)
-    # 1 4 5 6 2 3 (13 24 31 42 56 65)
-    # 1 3 4 5 6 2 (12 21 36 45 54 63)
-
 
 def merge_calendars(cal_1, cal_2):
+    '''
+    @brief: Merge 2 calenders into 1
+    @params:
+        cal_1   generated calendar 1
+        cal_2   generated calendar 2
+    '''
     res = list()
-    for i in range(0, len(cal_1)):
+    for i in enumerate(cal_1):
         res.append(cal_1[i]+cal_2[i])
     return res
 
 
 def fix_teamlist_lengths(tl1, tl2):
+    '''
+    @brief: Fix teamlist length in case of uneven teams
+    @params:
+        tl1   Teamlist 1
+        tl2   Teamlist 2
+    '''
     if len(tl1) > len(tl2):
-        padding_team = Team("FREE", "FREE", tl2[0][0][0].getRank(), 1000)
+        padding_team = Team("FREE", "FREE", tl2[0][0][0].get_rank(), 1000)
         nr_games = len(tl2[0])
         padding = [[padding_team, padding_team] for _ in range(nr_games)]
         tl2.append(padding)
         tl2.append(padding)
     if len(tl1) < len(tl2):
-        padding_team = Team("FREE", "FREE", tl1[0][0][0].getRank(), 1000)
+        padding_team = Team("FREE", "FREE", tl1[0][0][0].get_rank(), 1000)
         nr_games = len(tl1[0])
         padding = [[padding_team, padding_team] for _ in range(nr_games)]
         tl1.append(padding)
         tl1.append(padding)
-    return
 
 
 def check_constraints(cal):
+    '''
+    @brief: Check if the calender provided fits with the criteria
+    @params:
+        cal   The generated calendar
+    '''
     ret = False
-    global check_constraints
     for week in range(1, len(cal)):
         for game in cal[week]:
-            day = game[0].getDay()
-            club = game[0].getClub()
-            if game[1].getName() != 'FREE':
-                constraints_list[day][club]['games'] += 1
+            day = game[0].get_day()
+            club = game[0].get_club()
+            if game[1].get_name() != 'FREE':
+                CONSTRAINTS_LIST[day][club]['games'] += 1
 
-        for d, day in constraints_list.items():
-            for k, club in day.items():
+        for _, day in CONSTRAINTS_LIST.items():
+            for _, club in day.items():
                 if club['games'] > club['total']:
-                    # print("DAY {:1}: ISSUE WITH: {:8},{:16} | GAMES: {:1}, TOTAL: {:1}".format(week,d,k,club['games'],club['total']))
                     ret = True
                 club['games'] = 0
 
@@ -167,7 +200,10 @@ def check_constraints(cal):
 
 
 def print_header():
-    print('''
+    '''
+    @brief: Print a header. Looks cool.
+    '''
+    print(r'''
          _____               _    _____        _                   _
         |  __ \             | |  / ____|      | |                 | |
         | |__) |___    ___  | | | |      __ _ | |  ___  _ __    __| |  __ _  _ __
@@ -180,126 +216,138 @@ def print_header():
 
 
 def print_matchweeks(cal):
+    '''
+    @brief: Dump all the generated matchweeks
+    '''
     nr_weeks = len(cal)
-    rank = cal[0][0][0].getRank()
+    rank = cal[0][0][0].get_rank()
 
     for i in range(0, nr_weeks):
-        print(
-            "|--- WEEK {:2} - {:6} -------------------------------------------------------------|".format(i+1, rank))
+        print('''
+        |--- WEEK {:2} - {:6} -------------------------------------------------------------|
+        '''.format(i+1, rank))
         for day in cal[i]:
             print("| {:10} | {:20} VS {:20} @ {:20} |".format(
-                day[0].getDay(),
-                day[0].getName(),
-                day[1].getName(),
-                day[0].getClub()
+                day[0].get_day(),
+                day[0].get_name(),
+                day[1].get_name(),
+                day[0].get_club()
             ))
-        print("|----------------------------------------------------------------------------------|")
+        print('''
+        |----------------------------------------------------------------------------------|
+        ''')
         print()
     print()
 
 
 def populate_constraints_list(teamlist):
+    '''
+    @brief: Generate a global CONSTRAINTS_LIST which can be used to check the constraints against.
+    @params:
+        teamlist    all teams which have an impact in the league for constaints
+    '''
     for team in teamlist:
-        day = team.getDay()
-        club = team.getClub()
+        day = team.get_day()
+        club = team.get_club()
 
-        if not day in constraints_list:
-            constraints_list[day] = dict()
+        if not day in CONSTRAINTS_LIST:
+            CONSTRAINTS_LIST[day] = dict()
 
-        if not club in constraints_list[day]:
-            constraints_list[day][club] = dict()
+        if not club in CONSTRAINTS_LIST[day]:
+            CONSTRAINTS_LIST[day][club] = dict()
 
-        constraints_list[day][club]['games'] = 0
-        constraints_list[day][club]['total'] = int(team.getGames())
+        CONSTRAINTS_LIST[day][club]['games'] = 0
+        CONSTRAINTS_LIST[day][club]['total'] = int(team.get_games())
 
-    if not 'MAANDAG' in constraints_list:
-        constraints_list['MAANDAG'] = dict()
-    constraints_list['MAANDAG']['FREE'] = dict()
-    constraints_list['MAANDAG']['FREE']['games'] = 0
-    constraints_list['MAANDAG']['FREE']['total'] = 1000
+    if 'MAANDAG' not in CONSTRAINTS_LIST:
+        CONSTRAINTS_LIST['MAANDAG'] = dict()
+    CONSTRAINTS_LIST['MAANDAG']['FREE'] = dict()
+    CONSTRAINTS_LIST['MAANDAG']['FREE']['games'] = 0
+    CONSTRAINTS_LIST['MAANDAG']['FREE']['total'] = 1000
 
 
 def remove_old_output(file):
+    ''' Remove old output file if it exists '''
     if os.path.exists(file):
         os.remove(file)
 
-    with open('new_calendar.csv', 'w', newline='') as file:
+    with open('new_CALENDAR.csv', 'w', newline='') as outputfile:
         fieldnames = ['week', 'day', 'comp', 'team1', 'team2', 'location']
-        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer = csv.DictWriter(outputfile, fieldnames=fieldnames)
         writer.writeheader()
 
 
 def generate_output(cal):
-    with open('new_calendar.csv', 'a', newline='') as file:
+    ''' Generate a CSV output file with the generated calendar '''
+    with open('new_CALENDAR.csv', 'a', newline='') as file:
         fieldnames = ['week', 'day', 'comp', 'team1', 'team2', 'location']
         writer = csv.DictWriter(file, fieldnames=fieldnames)
-        for i in range(len(cal)):
+        for i in enumerate(cal):
             for game in cal[i]:
                 writer.writerow({
                     'week': str(i+1),
-                    'day': game[0].getDay(),
-                    'comp': game[0].getRank(),
-                    'team1': game[0].getName(),
-                    'team2': game[1].getName(),
-                    'location': game[0].getClub()
+                    'day': game[0].get_day(),
+                    'comp': game[0].get_rank(),
+                    'team1': game[0].get_name(),
+                    'team2': game[1].get_name(),
+                    'location': game[0].get_club()
                 })
 
 
 if __name__ == "__main__":
     # Get all teams from csv file
-    teamlist = get_teamlist("teams.csv")
+    TEAMLIST = get_teamlist("teams.csv")
 
     # Populate Constraints list
-    populate_constraints_list(teamlist)
+    populate_constraints_list(TEAMLIST)
 
     # Get list per ranking
-    teamlist_1 = get_teamlist_competition(teamlist, "ERE")
-    teamlist_2 = get_teamlist_competition(teamlist, "EERSTE")
+    TEAMLIST_1 = get_teamlist_competition(TEAMLIST, "ERE")
+    TEAMLIST_2 = get_teamlist_competition(TEAMLIST, "EERSTE")
 
     # Remove full teamlist from memory
-    del teamlist
+    del TEAMLIST
 
-    attempts = 0
-    not_done_yet = True
-    max_tries = 250000
-    printProgressBar(attempts, max_tries, prefix = 'Progress:', suffix = '')
-    while(not_done_yet):
-        attempts += 1
+    ATTEMPTS = 0
+    NOT_DONE = True
+    MAX_TRIES = 250000
+    print_progress_bar(ATTEMPTS, MAX_TRIES, prefix='Progress:', suffix='')
+    while NOT_DONE:
+        ATTEMPTS += 1
 
         # Randomnize teamlist
-        random.shuffle(teamlist_1)
-        random.shuffle(teamlist_2)
+        random.shuffle(TEAMLIST_1)
+        random.shuffle(TEAMLIST_2)
 
-        # Create Calendar
-        calendar_1 = generate_calendar(teamlist_1)
-        calendar_2 = generate_calendar(teamlist_2)
+        # Create CALENDAR
+        CALENDAR_1 = generate_calendar(TEAMLIST_1)
+        CALENDAR_2 = generate_calendar(TEAMLIST_2)
 
-        # Make the calendars equal in length
-        fix_teamlist_lengths(calendar_1, calendar_2)
+        # Make the CALENDARs equal in length
+        fix_teamlist_lengths(CALENDAR_1, CALENDAR_2)
 
-        # Merge Two Calendars
-        calendar = merge_calendars(calendar_1, calendar_2)
+        # Merge Two CALENDARs
+        CALENDAR = merge_calendars(CALENDAR_1, CALENDAR_2)
 
-        not_done_yet = check_constraints(calendar)
+        NOT_DONE = check_constraints(CALENDAR)
 
-        printProgressBar(attempts, max_tries, prefix = 'Progress:', suffix = '')
+        print_progress_bar(ATTEMPTS, MAX_TRIES, prefix='Progress:', suffix='')
 
-        if attempts == max_tries:
-            print("Failed to find suitable calendar within 250.000 tries.")
+        if ATTEMPTS == MAX_TRIES:
+            print("Failed to find suitable CALENDAR within 250.000 tries.")
             print("Are the constraints too strict?")
             raise SystemExit
 
-
-    printProgressBar(max_tries, max_tries, prefix = 'Progress:', suffix = '')
+    print_progress_bar(MAX_TRIES, MAX_TRIES, prefix='Progress:', suffix='')
 
     print_header()
-    print_matchweeks(calendar_1)
-    print_matchweeks(calendar_2)
+    print_matchweeks(CALENDAR_1)
+    print_matchweeks(CALENDAR_2)
 
     remove_old_output('output.csv')
 
-    generate_output(calendar_1)
-    generate_output(calendar_2)
+    generate_output(CALENDAR_1)
+    generate_output(CALENDAR_2)
 
-    print("NR OF ATTEMPTS = {}".format(attempts))
+    print("NR OF ATTEMPTS = {}".format(ATTEMPTS))
     input()
