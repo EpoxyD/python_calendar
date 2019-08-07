@@ -16,5 +16,15 @@ stages:
         versionSpec: '3.7'
     - bash: pip3 install -r requirements.txt
       displayName: Install Requirements
-    - bash: make
+    - bash: make PLATFORM=${{ parameters.platform }}
       displayName: Make Binary
+    - task: GithubRelease@0
+      displayName: GitHub Release
+      inputs:
+        action: create
+        githubConnection: EpoxyD
+        repositoryName: $(Build.Repository.Name)
+        target: $(Build.SourceVersion)
+        tagSource: auto
+        title: ${{ parameters.name }}_Release
+        assets: $(Build.ArtifactStagingDirectory)/PoolCalendar_*
