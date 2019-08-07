@@ -1,4 +1,10 @@
 stages:
+- stage: static_check
+  jobs:
+  - job: EchoSomething
+    steps:
+    - bash: echo Hello World
+
 - template: azure_template.yml
   parameters:
     name: Windows

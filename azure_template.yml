@@ -2,9 +2,8 @@ parameters:
   name: ''
   platform: ''
 
-stages:
 - stage: Build_${{ parameters.name }}
-  dependsOn: []
+  dependsOn: static_check
   jobs:
   - job: BuildOn${{ parameters.name }}
     pool:
