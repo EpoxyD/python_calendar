@@ -1,21 +1,17 @@
 stages:
-- stage: static_check
-  jobs:
-    - job: linter
-      steps:
-        - bash: pylint src/*.py
+- template: stages/static_checks.yml
 
-- template: azure_template.yml
+- template: stages/cross-platform.yml
   parameters:
     name: Windows
     platform: vs2017-win2016
 
-- template: azure_template.yml
+- template: stages/cross-platform.yml
   parameters:
     name: MacOS
     platform: macos-10.13
 
-- template: azure_template.yml
+- template: stages/cross-platform.yml
   parameters:
     name: Linux
     platform: ubuntu-16.04
