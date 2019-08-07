@@ -1,25 +1,15 @@
 stages:
-- stage: Requirements
-  jobs:
-  - job: InstallRequirements
-    steps:
-    - script: |
-      pip3 install -r requirements
+- template: azure_template.yml
+  parameters:
+    name: Windows
+    platform: vs2017-win2016
 
-- stage: Build
-  jobs:
-  - job: BuildOnWindows
-    steps:
-    - script: echo Building on Windows!
-  - job: BuildOnLinux
-    steps:
-    - script: echo Building on Linux!
+- template: azure_template.yml
+  parameters:
+    name: MacOS
+    platform: macos-10.13
 
-- stage: Test
-  jobs:
-  - job: TestOnWindows
-    steps:
-    - script: echo Testing on Windows!
-  - job: TestOnLinux
-    steps:
-    - script: echo Testing on Linux!
+- template: azure_template.yml
+  parameters:
+    name: Linux
+    platform: ubuntu-16.04

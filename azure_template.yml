@@ -1,0 +1,13 @@
+parameters:
+  name: ''
+  platform: ''
+
+stages:
+- stage: Build_${{ parameters.name }}
+  jobs:
+  - job: BuildOn${{ parameters.name }}
+    pool:
+      vmImage: ${{ parameters.platform }}
+    steps:
+    - bash: pip3 install -r requirements.txt
+    - bash: make
