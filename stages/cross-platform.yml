@@ -18,13 +18,14 @@ stages:
       displayName: Install Requirements
     - bash: make PLATFORM=${{ parameters.platform }}
       displayName: Make Binary
+    - bash: ls -lah
+      displayName: List output
     - task: GithubRelease@0
       displayName: GitHub Release
       inputs:
         gitHubConnection: Azure Pipeline
-        action: create
-        tagSource: auto
         repositoryName: $(Build.Repository.Name)
-        target: $(Build.SourceVersion)
-        title: ${{ parameters.name }}_Release
+        tagSource: manual
+        tag: ${{ parameters.name }}_v$(MajorVersion).$(MinorVersion).$(PatchVersion)
+        title: ${{ parameters.name }}_v$(MajorVersion).$(MinorVersion).$(PatchVersion)
         assets: $(Build.ArtifactStagingDirectory)/PoolCalendar_*
