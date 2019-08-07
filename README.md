@@ -1,3 +1,5 @@
+[![Build Status](https://dev.azure.com/evertborghgraef/evert_borghgraef/_apis/build/status/EpoxyD.python_calendar?branchName=master)](https://dev.azure.com/evertborghgraef/evert_borghgraef/_build/latest?definitionId=1&branchName=master)
+
 # python_calendar
 
 ### Generate Binary
