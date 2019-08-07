@@ -3,3 +3,4 @@ new_calendar.csv
 PoolCalendar
 teams.csv
 *.pyc
+*.xml

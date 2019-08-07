@@ -21,10 +21,8 @@ stages:
     - task: GithubRelease@0
       displayName: GitHub Release
       inputs:
-        action: create
-        githubConnection: EpoxyD
+        gitHubConnection: Azure Pipeline
         repositoryName: $(Build.Repository.Name)
         target: $(Build.SourceVersion)
-        tagSource: auto
         title: ${{ parameters.name }}_Release
         assets: $(Build.ArtifactStagingDirectory)/PoolCalendar_*
