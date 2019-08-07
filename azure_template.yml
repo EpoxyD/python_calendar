@@ -10,6 +10,8 @@ stages:
     pool:
       vmImage: ${{ parameters.platform }}
     steps:
-    - bash: pip install --upgrade pip
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.7'
     - bash: pip3 install -r requirements.txt
     - bash: make
