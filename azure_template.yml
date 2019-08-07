@@ -4,6 +4,7 @@ parameters:
 
 stages:
 - stage: Build_${{ parameters.name }}
+  dependsOn: []
   jobs:
   - job: BuildOn${{ parameters.name }}
     pool:
