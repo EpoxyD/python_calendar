@@ -3,7 +3,8 @@ stages:
   jobs:
   - job: InstallRequirements
     steps:
-    - script: echo Installing Requirements!
+    - script: |
+      pip3 install -r requirements
 
 - stage: Build
   jobs:
