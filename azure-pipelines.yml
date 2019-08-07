@@ -1,16 +1,24 @@
-jobs:
+stages:
+- stage: Requirements
+  jobs:
+  - job: InstallRequirements
+    steps:
+    - script: echo Installing Requirements!
 
-- job: 'Linux'
-  pool:
-    vmImage: 'ubuntu-16.04'
-  steps:
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '3.6'
-  - script: |
-      python3 -m pip install --upgrade pip
-      python3 -m pip install -r requirements.txt
-  - script: pylint -j0 --errors-only src/*.py
-  - script: pytest --junitxml=results.xml
-  - script: make
-  - script: ./Poolcalendar
+- stage: Build
+  jobs:
+  - job: BuildOnWindows
+    steps:
+    - script: echo Building on Windows!
+  - job: BuildOnLinux
+    steps:
+    - script: echo Building on Linux!
+
+- stage: Test
+  jobs:
+  - job: TestOnWindows
+    steps:
+    - script: echo Testing on Windows!
+  - job: TestOnLinux
+    steps:
+    - script: echo Testing on Linux!
