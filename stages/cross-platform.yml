@@ -1,0 +1,16 @@
+parameters:
+  name: ''
+  platform: ''
+
+- stage: Build_${{ parameters.name }}
+  dependsOn: static_check
+  jobs:
+  - job: BuildOn${{ parameters.name }}
+    pool:
+      vmImage: ${{ parameters.platform }}
+    steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.7'
+    - bash: pip3 install -r requirements.txt
+    - bash: make
