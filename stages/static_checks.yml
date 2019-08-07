@@ -7,4 +7,6 @@ stages:
     - task: UsePythonVersion@0
       inputs:
         versionSpec: '3.7'
-    - bash: pylint src/*.py
+    - bash: |
+        pip3 install pylint
+        pylint src/*.py
