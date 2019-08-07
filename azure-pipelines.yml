@@ -1,9 +1,9 @@
 stages:
 - stage: static_check
   jobs:
-  - job: EchoSomething
-    steps:
-    - bash: echo Hello World
+    - job: linter
+      steps:
+        - bash: pylint src/*.py
 
 - template: azure_template.yml
   parameters:
