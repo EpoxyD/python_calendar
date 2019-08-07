@@ -1,7 +1,6 @@
 parameters:
   name: ''
   platform: ''
-  extension: ''
 
 stages:
 - stage: Build_${{ parameters.name }}
@@ -21,6 +20,10 @@ stages:
       displayName: Make Binary
     - bash: ls -lah
       displayName: List output
+    - task: CopyFiles@2
+      inputs:
+        contents: PoolCalendar_${{ parameters.name }}*
+        targetFolder: $(Build.ArtifactStagingDirectory)
     - task: GithubRelease@0
       displayName: GitHub Release
       inputs:
@@ -29,4 +32,4 @@ stages:
         tagSource: manual
         tag: ${{ parameters.name }}_$(Build.BuildNumber)
         title: ${{ parameters.name }}_$(Build.BuildNumber)
-        assets: $(Build.ArtifactStagingDirectory)/PoolCalendar_${{ parameters.name }}${{ parameters.extension }}
+        assets: $(Build.ArtifactStagingDirectory)/PoolCalendar_${{ parameters.name }}
