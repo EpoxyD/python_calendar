@@ -1,4 +1,6 @@
 stages:
+- template: stages/static_checks.yml
+
 - template: stages/cross-platform.yml
   parameters:
     name: Windows

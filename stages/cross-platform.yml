@@ -4,7 +4,7 @@ parameters:
 
 stages:
 - stage: Build_${{ parameters.name }}
-  dependsOn: static_check
+  dependsOn: StaticChecks
   jobs:
   - job: BuildOn${{ parameters.name }}
     pool:
