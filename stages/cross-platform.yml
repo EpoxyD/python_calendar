@@ -1,6 +1,7 @@
 parameters:
   name: ''
   platform: ''
+  extension: ''
 
 stages:
 - stage: Build_${{ parameters.name }}
@@ -16,7 +17,7 @@ stages:
         versionSpec: '3.7'
     - bash: pip3 install -r requirements.txt
       displayName: Install Requirements
-    - bash: make PLATFORM=${{ parameters.platform }}
+    - bash: make PLATFORM=${{ parameters.name }}
       displayName: Make Binary
     - bash: ls -lah
       displayName: List output
@@ -28,4 +29,4 @@ stages:
         tagSource: manual
         tag: ${{ parameters.name }}_v$(MajorVersion).$(MinorVersion).$(PatchVersion)
         title: ${{ parameters.name }}_v$(MajorVersion).$(MinorVersion).$(PatchVersion)
-        assets: $(Build.ArtifactStagingDirectory)/PoolCalendar_*
+        assets: $(Build.ArtifactStagingDirectory)/PoolCalendar_${{ parameters.name }}${{ parameters.extension }}

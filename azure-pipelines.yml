@@ -5,6 +5,7 @@ stages:
   parameters:
     name: Windows
     platform: windows-latest
+    extension: .exe
 
 - template: stages/cross-platform.yml
   parameters:
