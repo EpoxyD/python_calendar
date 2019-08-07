@@ -1,0 +1,17 @@
+stages:
+- stage: Release
+  jobs:
+  - job: Release
+    steps:
+    - bash: ls -lah $(Build.ArtifactStagingDirectory)
+      displayName: List output
+    - task: GithubRelease@0
+      displayName: GitHub Release
+      inputs:
+        action: edit
+        gitHubConnection: Azure Pipeline
+        repositoryName: $(Build.Repository.Name)
+        tagSource: manual
+        tag: $(Build.BuildNumber)
+        title: $(Build.BuildNumber)
+        assets: $(Build.ArtifactStagingDirectory)/PoolCalendar_*
