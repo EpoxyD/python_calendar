@@ -17,17 +17,9 @@ jobs:
     displayName: Make Binary
   - bash: ls -lah
     displayName: List output
+  - bash: ls -lah $(Build.ArtifactStagingDirectory)
+    displayName: List output
   - task: CopyFiles@2
     inputs:
       contents: PoolCalendar_${{ parameters.name }}*
       targetFolder: $(Build.ArtifactStagingDirectory)
-  - task: GithubRelease@0
-    displayName: GitHub Release
-    inputs:
-      action: edit
-      gitHubConnection: Azure Pipeline
-      repositoryName: $(Build.Repository.Name)
-      tagSource: manual
-      tag: $(Build.BuildNumber)
-      title: $(Build.BuildNumber)
-      assets: $(Build.ArtifactStagingDirectory)/PoolCalendar_${{ parameters.name }}
