@@ -2,35 +2,32 @@ parameters:
   name: ''
   platform: ''
 
-stages:
-- stage: Build_${{ parameters.name }}
-  dependsOn: StaticChecks
-  jobs:
-  - job: BuildOn${{ parameters.name }}
-    pool:
-      vmImage: ${{ parameters.platform }}
-    steps:
-    - task: UsePythonVersion@0
-      displayName: Set Python version to 3.7
-      inputs:
-        versionSpec: '3.7'
-    - bash: pip3 install -r requirements.txt
-      displayName: Install Requirements
-    - bash: make PLATFORM=${{ parameters.name }}
-      displayName: Make Binary
-    - bash: ls -lah
-      displayName: List output
-    - task: CopyFiles@2
-      inputs:
-        contents: PoolCalendar_${{ parameters.name }}*
-        targetFolder: $(Build.ArtifactStagingDirectory)
-    - task: GithubRelease@0
-      displayName: GitHub Release
-      inputs:
-        action: edit
-        gitHubConnection: Azure Pipeline
-        repositoryName: $(Build.Repository.Name)
-        tagSource: manual
-        tag: $(Build.BuildNumber)
-        title: $(Build.BuildNumber)
-        assets: $(Build.ArtifactStagingDirectory)/PoolCalendar_${{ parameters.name }}
+jobs:
+- job: BuildOn${{ parameters.name }}
+  pool:
+    vmImage: ${{ parameters.platform }}
+  steps:
+  - task: UsePythonVersion@0
+    displayName: Set Python version to 3.7
+    inputs:
+      versionSpec: '3.7'
+  - bash: pip3 install -r requirements.txt
+    displayName: Install Requirements
+  - bash: make PLATFORM=${{ parameters.name }}
+    displayName: Make Binary
+  - bash: ls -lah
+    displayName: List output
+  - task: CopyFiles@2
+    inputs:
+      contents: PoolCalendar_${{ parameters.name }}*
+      targetFolder: $(Build.ArtifactStagingDirectory)
+  - task: GithubRelease@0
+    displayName: GitHub Release
+    inputs:
+      action: edit
+      gitHubConnection: Azure Pipeline
+      repositoryName: $(Build.Repository.Name)
+      tagSource: manual
+      tag: $(Build.BuildNumber)
+      title: $(Build.BuildNumber)
+      assets: $(Build.ArtifactStagingDirectory)/PoolCalendar_${{ parameters.name }}

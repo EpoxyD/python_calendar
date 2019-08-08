@@ -1,19 +1,34 @@
 stages:
 - template: stages/static_checks.yml
 
-- template: stages/cross-platform.yml
-  parameters:
-    name: Windows
-    platform: windows-latest
+- stage: CrossPlatformBuild
+  dependsOn: StaticChecks
+  jobs:
+  - template: stages/cross-platform.yml
+    parameters:
+      name: Windows
+      platform: windows-latest
 
-- template: stages/cross-platform.yml
-  parameters:
-    name: MacOS
-    platform: macOS-latest
+  - template: stages/cross-platform.yml
+    parameters:
+      name: MacOS
+      platform: macOS-latest
 
-- template: stages/cross-platform.yml
-  parameters:
-    name: Linux
-    platform: ubuntu-latest
+  - template: stages/cross-platform.yml
+    parameters:
+      name: Linux
+      platform: ubuntu-latest
+  - job:
+    steps:
+        - task: GithubRelease@0
+          displayName: GitHub Release
+          inputs:
+            action: edit
+            gitHubConnection: Azure Pipeline
+            repositoryName: $(Build.Repository.Name)
+            tagSource: manual
+            tag: Tag_$(Build.BuildNumber)
+            title: Title_$(Build.BuildNumber)
+            assets: $(Build.ArtifactStagingDirectory)/PoolCalendar_*
 
 - template: stages/upload-releases.yml
