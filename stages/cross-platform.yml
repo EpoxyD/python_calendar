@@ -17,8 +17,6 @@ jobs:
     displayName: Make Binary
   - bash: ls -lah
     displayName: List output
-  - bash: ls -lah $(Build.ArtifactStagingDirectory)
-    displayName: List output
   - task: CopyFiles@2
     inputs:
       contents: PoolCalendar_${{ parameters.name }}*

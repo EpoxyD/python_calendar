@@ -1,6 +1,11 @@
 jobs:
 - job: GithubRelease
   displayName: Release images to Github
+  dependsOn: [
+    BuildOnWindows,
+    BuildOnMacOS,
+    BuildOnLinux
+  ]
   steps:
   - bash: ls -lah $(Build.ArtifactStagingDirectory)
   - task: GithubRelease@0
