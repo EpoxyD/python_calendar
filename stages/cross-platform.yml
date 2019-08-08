@@ -18,6 +18,12 @@ jobs:
   - bash: ls -lah
     displayName: List output
   - task: CopyFiles@2
+    displayName: Copy Files to Staging
     inputs:
       contents: PoolCalendar_${{ parameters.name }}*
       targetFolder: $(Build.ArtifactStagingDirectory)
+  - task: PublishBuildArtifacts@1
+    displayName: Publish Artifacts
+    inputs:
+      pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      artifactName: PoolCalendar_${{ parameters.name }}
