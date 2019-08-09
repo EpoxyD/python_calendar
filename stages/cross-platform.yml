@@ -27,3 +27,13 @@ jobs:
     inputs:
       pathtoPublish: '$(Build.ArtifactStagingDirectory)'
       artifactName: PoolCalendar_${{ parameters.name }}
+  - task: GithubRelease@0
+    displayName: GitHub Release ${{ parameters.name }}
+    inputs:
+      action: edit
+      gitHubConnection: Azure Pipeline
+      repositoryName: $(Build.Repository.Name)
+      tagSource: auto
+      tag: PoolCalendar_${{ parameters.name }}$(Build.BuildNumber)
+      title: Release_PoolCalendar_${{ parameters.name }}_$(Build.BuildNumber)
+      assets: $(Build.ArtifactStagingDirectory)/PoolCalendar_${{ parameters.name }}

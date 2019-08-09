@@ -4,19 +4,17 @@ stages:
 - stage: CrossPlatformBuild
   dependsOn: StaticChecks
   jobs:
-  - template: stages/cross-platform.yml
-    parameters:
-      name: Windows
-      platform: windows-latest
+  # - template: stages/cross-platform.yml
+  #   parameters:
+  #     name: Windows
+  #     platform: windows-latest
 
-  - template: stages/cross-platform.yml
-    parameters:
-      name: MacOS
-      platform: macOS-latest
+  # - template: stages/cross-platform.yml
+  #   parameters:
+  #     name: MacOS
+  #     platform: macOS-latest
 
   - template: stages/cross-platform.yml
     parameters:
       name: Linux
       platform: ubuntu-latest
-
-  - template: stages/github_release.yml
