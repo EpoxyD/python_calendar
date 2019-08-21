@@ -124,37 +124,35 @@ def generate_calendar(teamlist):
 
 
 def merge_calendars(cal_1, cal_2):
-    while(len(cal_1) != len(cal_2)):
-        if len(cal_1) > len(cal_2):
-            padding_team = Team("FREE", "FREE", cal_2[0][0][0].getRank(), 1000)
-            padding_game = [padding_team, padding_team]
-            padding_week = [padding_game for games in calendar_2[0]]
-            calendar_2.append(padding_week)
-        elif len(cal_1) < len(cal_2):
-            padding_team = Team("FREE", "FREE", cal_1[0][0][0].getRank(), 1000)
-            print()
-        else:
-            break
-
     res = list()
     for i in range(0, len(cal_1)):
         res.append(cal_1[i] + cal_2[i])
     return res
 
 
-def fix_teamlist_lengths(tl1, tl2):
-    if len(tl1) > len(tl2):
-        padding_team = Team("FREE", "FREE", tl2[0][0][0].getRank(), 1000)
-        nr_games = len(tl2[0])
-        padding = [[padding_team, padding_team] for _ in range(nr_games)]
-        tl2.append(padding)
-        tl2.append(padding)
-    if len(tl1) < len(tl2):
-        padding_team = Team("FREE", "FREE", tl1[0][0][0].getRank(), 1000)
-        nr_games = len(tl1[0])
-        padding = [[padding_team, padding_team] for _ in range(nr_games)]
-        tl1.append(padding)
-        tl1.append(padding)
+def fix_calendar_length(cal_1, cal_2):
+    mix = 0
+    while(len(cal_1) != len(cal_2)):
+        len_1 = len(cal_1)
+        len_2 = len(cal_2)
+        if len_1 > len_2:
+            mock_game = [ Team("FREE", "FREE", team.getRank(), 1000) for team in cal_2[0][0] ]
+            mock_week = [ mock_game for _ in cal_2[0] ]
+            if mix % 2:
+                cal_2.append(mock_week)
+            else:
+                cal_2.insert(len_2//2, mock_week)
+
+
+        if len_1 < len_2:
+            mock_game = [ Team("FREE", "FREE", team.getRank(), 1000) for team in cal_1[0][0] ]
+            mock_week = [ mock_game for _ in cal_1[0] ]
+            if mix % 2:
+                cal_1.append(mock_week)
+            else:
+                cal_1.insert(len_2//2, mock_week)
+
+        mix = mix + 1
     return
 
 
@@ -165,13 +163,12 @@ def check_constraints(cal):
         for game in cal[week]:
             day = game[0].getDay()
             club = game[0].getClub()
-            if game[1].getName() != 'FREE':
+            if game[1].getName() != 'FREE' and game[1].getName() != 'EINDRONDE':
                 constraints_list[day][club]['games'] += 1
 
         for d, day in constraints_list.items():
             for k, club in day.items():
                 if club['games'] > club['total']:
-                    # print("DAY {:1}: ISSUE WITH: {:8},{:16} | GAMES: {:1}, TOTAL: {:1}".format(week,d,k,club['games'],club['total']))
                     ret = True
                 club['games'] = 0
 
@@ -256,6 +253,12 @@ def generate_output(cal):
                     'location': game[0].getClub()
                 })
 
+def add_eindronde(cal):
+    nr_weeks = len(cal) // 2
+    mock_game = [ Team('EINDRONDE', 'EINDRONDE','EERSTE',1000,'MAANDAG') for game in cal[0][0] ]
+    mock_week = [ mock_game for week in cal[0]]
+    for week in range(nr_weeks):
+        cal.append(mock_week)
 
 if __name__ == "__main__":
     csvfile = input("What is the name of your csv file? ")
@@ -290,8 +293,10 @@ if __name__ == "__main__":
         calendar_1 = generate_calendar(teamlist_1)
         calendar_2 = generate_calendar(teamlist_2)
 
+        add_eindronde(calendar_2)
+
         # Make the calendars equal in length
-        fix_teamlist_lengths(calendar_1, calendar_2)
+        fix_calendar_length(calendar_1, calendar_2)
 
         # Merge Two Calendars
         calendar = merge_calendars(calendar_1, calendar_2)
