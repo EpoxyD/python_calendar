@@ -136,17 +136,18 @@ def fix_calendar_length(cal_1, cal_2):
         len_1 = len(cal_1)
         len_2 = len(cal_2)
         if len_1 > len_2:
-            mock_game = [ Team("FREE", "FREE", team.getRank(), 1000) for team in cal_2[0][0] ]
-            mock_week = [ mock_game for _ in cal_2[0] ]
+            mock_game = [Team("FREE", "FREE", team.getRank(), 1000)
+                         for team in cal_2[0][0]]
+            mock_week = [mock_game for _ in cal_2[0]]
             if mix % 2:
                 cal_2.append(mock_week)
             else:
                 cal_2.insert(len_2//2, mock_week)
 
-
         if len_1 < len_2:
-            mock_game = [ Team("FREE", "FREE", team.getRank(), 1000) for team in cal_1[0][0] ]
-            mock_week = [ mock_game for _ in cal_1[0] ]
+            mock_game = [Team("FREE", "FREE", team.getRank(), 1000)
+                         for team in cal_1[0][0]]
+            mock_week = [mock_game for _ in cal_1[0]]
             if mix % 2:
                 cal_1.append(mock_week)
             else:
@@ -163,12 +164,13 @@ def check_constraints(cal):
         for game in cal[week]:
             day = game[0].getDay()
             club = game[0].getClub()
-            if game[1].getName() != 'FREE' and game[1].getName() != 'EINDRONDE':
+            if game[0].getName() != 'FREE' and game[1].getName() != 'FREE':
                 constraints_list[day][club]['games'] += 1
 
         for d, day in constraints_list.items():
             for k, club in day.items():
                 if club['games'] > club['total']:
+                    # print("ISSUE WEEK {:2}: {:20} on {:10}".format(week, k, d))
                     ret = True
                 club['games'] = 0
 
@@ -253,12 +255,15 @@ def generate_output(cal):
                     'location': game[0].getClub()
                 })
 
+
 def add_eindronde(cal):
     nr_weeks = len(cal) // 2
-    mock_game = [ Team('EINDRONDE', 'EINDRONDE','EERSTE',1000,'MAANDAG') for game in cal[0][0] ]
-    mock_week = [ mock_game for week in cal[0]]
+    mock_team = Team('FREE', 'FREE', cal[0][0][0].getRank(), 1000, 'MAANDAG')
+    mock_game = [mock_team for game in cal[0][0]]
+    mock_week = [mock_game for week in cal[0]]
     for week in range(nr_weeks):
         cal.append(mock_week)
+
 
 if __name__ == "__main__":
     csvfile = input("What is the name of your csv file? ")
