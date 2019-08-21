@@ -16,7 +16,7 @@ clean:
 ifeq ($(OS),Windows_NT)
 	@DEL /F/S/Q $(COMPONENT).exe > nul 2>&1
 else
-	@rm -f $(COMPONENT)
+	@rm -rf $(COMPONENT) new_calendar.csv src/__pycache__
 endif
 
 check:
