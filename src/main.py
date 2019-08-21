@@ -3,7 +3,19 @@ import random
 import os
 
 constraints_list = dict()
+issues = dict()
 
+def add_issue(week, day, club):
+    if not club in issues:
+        issues[club] = dict()
+    if not day in issues[club]:
+        issues[club][day] = 0
+    issues[club][day] = issues[club][day] + 1
+
+def print_issues():
+    for club, days in issues.items():
+        for day, nr_issues in days.items():
+            print("Found {} issues on {} for {}".format(nr_issues, day, club))
 
 class Team:
     ''' Object containing all the team data '''
@@ -171,6 +183,7 @@ def check_constraints(cal):
             for k, club in day.items():
                 if club['games'] > club['total']:
                     # print("ISSUE WEEK {:2}: {:20} on {:10}".format(week, k, d))
+                    add_issue(week, d, k)
                     ret = True
                 club['games'] = 0
 
@@ -313,6 +326,7 @@ if __name__ == "__main__":
         if attempts == max_tries:
             print("Failed to find suitable calendar within 250.000 tries.")
             print("Are the constraints too strict?")
+            print_issues()
             raise SystemExit
 
     printProgressBar(max_tries, max_tries, prefix='Progress:', suffix='')
