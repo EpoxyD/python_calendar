@@ -124,9 +124,21 @@ def generate_calendar(teamlist):
 
 
 def merge_calendars(cal_1, cal_2):
+    while(len(cal_1) != len(cal_2)):
+        if len(cal_1) > len(cal_2):
+            padding_team = Team("FREE", "FREE", cal_2[0][0][0].getRank(), 1000)
+            padding_game = [padding_team, padding_team]
+            padding_week = [padding_game for games in calendar_2[0]]
+            calendar_2.append(padding_week)
+        elif len(cal_1) < len(cal_2):
+            padding_team = Team("FREE", "FREE", cal_1[0][0][0].getRank(), 1000)
+            print()
+        else:
+            break
+
     res = list()
     for i in range(0, len(cal_1)):
-        res.append(cal_1[i]+cal_2[i])
+        res.append(cal_1[i] + cal_2[i])
     return res
 
 
@@ -246,8 +258,12 @@ def generate_output(cal):
 
 
 if __name__ == "__main__":
+    csvfile = input("What is the name of your csv file? ")
+    if ".csv" not in csvfile:
+        csvfile = csvfile + ".csv"
+
     # Get all teams from csv file
-    teamlist = get_teamlist("teams.csv")
+    teamlist = get_teamlist(csvfile)
 
     # Populate Constraints list
     populate_constraints_list(teamlist)
@@ -262,7 +278,7 @@ if __name__ == "__main__":
     attempts = 0
     not_done_yet = True
     max_tries = 250000
-    printProgressBar(attempts, max_tries, prefix = 'Progress:', suffix = '')
+    printProgressBar(attempts, max_tries, prefix='Progress:', suffix='')
     while(not_done_yet):
         attempts += 1
 
@@ -282,15 +298,14 @@ if __name__ == "__main__":
 
         not_done_yet = check_constraints(calendar)
 
-        printProgressBar(attempts, max_tries, prefix = 'Progress:', suffix = '')
+        printProgressBar(attempts, max_tries, prefix='Progress:', suffix='')
 
         if attempts == max_tries:
             print("Failed to find suitable calendar within 250.000 tries.")
             print("Are the constraints too strict?")
             raise SystemExit
 
-
-    printProgressBar(max_tries, max_tries, prefix = 'Progress:', suffix = '')
+    printProgressBar(max_tries, max_tries, prefix='Progress:', suffix='')
 
     print_header()
     print_matchweeks(calendar_1)

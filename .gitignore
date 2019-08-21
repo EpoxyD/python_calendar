@@ -1,4 +1,4 @@
 .vscode
 new_calendar.csv
-teams.csv
+*.csv
 PoolCalendar
