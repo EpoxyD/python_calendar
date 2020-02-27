@@ -1,5 +1,7 @@
 import csv
 import os
+import argparse
+
 from Team import Team
 
 
@@ -54,3 +56,20 @@ def generate_output(cal):
                     'team2': game[1].getName(),
                     'location': game[0].getClub()
                 })
+
+
+def get_arguments():
+    ''' return a list of csv files '''
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "files",
+        nargs='+',
+        help="one csv file per competition"
+    )
+    args = parser.parse_args()
+    for i in range(0, len(args.files)):
+        tmp = args.files.pop(i)
+        if not '.csv' in tmp:
+            tmp += '.csv'
+        args.files.insert(i, tmp)
+    return args.files
