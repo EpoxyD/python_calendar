@@ -1,4 +1,3 @@
-.vscode
-new_calendar.csv
-*.csv
-PoolCalendar
+*__pycache__*
+*.log
+*.txt

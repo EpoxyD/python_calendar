@@ -1,3 +1,18 @@
+import logging
+import sys
+
+logger = logging.getLogger('X')
+logger.setLevel(logging.DEBUG)
+handler = logging.StreamHandler(sys.stdout)
+handler.setLevel(logging.DEBUG)
+handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+logger.addHandler(handler)
+
+
+def get_logger():
+    global logger
+    return logger
+
 
 def print_header():
     print('''

@@ -1,23 +1,16 @@
 class Team:
-    ''' Object containing all the team data '''
+    ''' Object containing team data '''
 
-    def __init__(self,
-                 c=None,
-                 n=None,
-                 r="EERSTE",
-                 t=2,
-                 d1="MAANDAG"):
-        self.club = c
-        self.name = n
-        self.rank = r
-        self.day = d1
+    def __init__(self, club, name, day):
+        self.club = club
+        self.name = name
+        self.day = day
 
     def dump(self):
-        print("[{name}, {club}, {rank}, {day}]".format(
-            name = self.name,
-            club = self.club,
-            rank = self.rank,
-            day = self.day
+        print("[{name}, {club}, {day}]".format(
+            name=self.name,
+            club=self.club,
+            day=self.day
         ))
 
     def getClub(self):
@@ -25,9 +18,6 @@ class Team:
 
     def getName(self):
         return self.name
-
-    def getRank(self):
-        return self.rank
 
     def getDay(self):
         return self.day

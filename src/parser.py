@@ -2,7 +2,11 @@ import csv
 import os
 import argparse
 
+import printer
+
 from Team import Team
+
+logger = printer.get_logger()
 
 
 def get_teamlist(csv_file):
@@ -13,8 +17,6 @@ def get_teamlist(csv_file):
             teams.append(Team(
                 entry['club'],
                 entry['name'],
-                entry['rank'],
-                entry['games'],
                 entry['day'],
             ))
     return teams
@@ -73,3 +75,28 @@ def get_arguments():
             tmp += '.csv'
         args.files.insert(i, tmp)
     return args.files
+
+
+def parse_competitions(csv_files):
+    competitions = dict()
+    constraints = dict()
+    for csv_file in csv_files:
+        with open(csv_file) as file:
+            logger.info("Parse {csv_file}".format(csv_file=csv_file))
+            reader = csv.DictReader(file)
+            for entry in reader:
+                club = entry['club']
+                name = entry['name']
+                rank = entry['rank']
+                day = entry['day']
+                games = entry['games']
+
+                if not rank in competitions:
+                    competitions[rank] = list()
+
+                if not club in constraints:
+                    constraints[club] = dict()
+
+                competitions[rank].append(Team(club, name, day))
+                constraints[club][day] = games
+    return competitions, constraints
