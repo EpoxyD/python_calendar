@@ -1,8 +1,7 @@
-import csv
-import os
 import argparse
-
+import csv
 import printer
+import os
 
 from Team import Team
 
@@ -30,14 +29,11 @@ def get_teamlist_competition(all_teams, rank):
         if team.rank == rank:
             result.append(team)
     if len(result) % 2:
-        result.append(Team("FREE", "FREE", rank, 1000))
+        result.append(Team("FREE", "FREE", "MAANDAG"))
     return result
 
 
 def remove_old_output(file):
-    if os.path.exists(file):
-        os.remove(file)
-
     with open('new_calendar.csv', 'w', newline='') as file:
         fieldnames = ['week', 'day', 'comp', 'team1', 'team2', 'location']
         writer = csv.DictWriter(file, fieldnames=fieldnames)

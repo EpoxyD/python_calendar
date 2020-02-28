@@ -2,7 +2,8 @@ COMPONENT=PoolCalendar
 
 all :
 	@echo "Generating binary"
-	@pyinstaller -c -F -i src/pool.ico -n $(COMPONENT) --log-level ERROR --distpath . src/main.py
+	@mkdir -p output
+	@pyinstaller -c -F -i src/pool.ico -n $(COMPONENT) --log-level ERROR --distpath output src/main.py
 	@echo "Removing temporary files"
 ifeq ($(OS),Windows_NT)
 	@RD /S/Q build > nul 2>&1
@@ -10,7 +11,7 @@ ifeq ($(OS),Windows_NT)
 else
 	@rm -rf build $(COMPONENT).spec
 endif
-	@echo "You can now run the $(COMPONENT)"
+	@echo "RUN ./$(COMPONENT)"
 
 clean:
 ifeq ($(OS),Windows_NT)
