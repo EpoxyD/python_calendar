@@ -23,7 +23,6 @@ def get_teamlist(csv_file):
 
 def get_teamlist_competition(all_teams, rank):
     ''' return a subset of all teams containing only those with the specified rank '''
-
     result = list()
     for team in all_teams:
         if team.rank == rank:
@@ -64,13 +63,30 @@ def get_arguments():
         nargs='+',
         help="one csv file per competition"
     )
+    parser.add_argument(
+        "-r", 
+        "--rounds",
+        help="Specificy how many rounds for each file (comma separated)"
+    )
     args = parser.parse_args()
+
     for i in range(0, len(args.files)):
         tmp = args.files.pop(i)
         if not '.csv' in tmp:
             tmp += '.csv'
         args.files.insert(i, tmp)
-    return args.files
+        
+    if args.rounds:
+        args.rounds = args.rounds.split(',')
+        if len(args.rounds) != len(args.files):
+            logger.error("Specified nr of rounds mismatch with nr of csv files")
+            raise SystemExit
+    else:
+        args.rounds = list()
+        for _ in args.files:
+            args.rounds.append(2)
+
+    return args.files, args.rounds
 
 
 def parse_competitions(csv_files):
@@ -94,5 +110,8 @@ def parse_competitions(csv_files):
                     constraints[club] = dict()
 
                 competitions[rank].append(Team(club, name, day))
-                constraints[club][day] = games
+                constraints[club][day] = int(games)
+            constraints["FREE"] = dict()
+            constraints["FREE"]["MAANDAG"] = 1000
+    del csv_files
     return competitions, constraints

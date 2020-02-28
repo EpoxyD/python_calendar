@@ -3,11 +3,17 @@ import parser
 import printer
 import random
 
+from Team import Team
+
 
 logger = printer.get_logger()
 
 
 def generate_calendar(teamlist):
+    if len(teamlist) % 2:
+        teamlist.append(Team("FREE", "FREE", "MAANDAG"))
+    print("Team length =", len(teamlist))
+    random.shuffle(teamlist)
     result = dict()
     tll = len(teamlist)
     for i in range(1, tll):
@@ -28,19 +34,21 @@ def generate_calendar(teamlist):
         teamlist.insert(1, teamlist.pop(-1))
     return result
 
+
 if __name__ == "__main__":
     logger.info("Parsing arguments")
-    csv_files = parser.get_arguments()
+    csv_files, nr_rounds = parser.get_arguments()
 
+    print(csv_files)
     logger.info("Parsing teams")
     competitions, constraints = parser.parse_competitions(csv_files)
+    del csv_files
 
-    for competitions, teams in competitions.items():
-        random.shuffle(teams)
+    calendars = dict()
+    for competition, teams in competitions.items():
+        logger.info("Generating calendar for %s" % competition)
         calendar = generate_calendar(teams)
+        calendars[competition] = calendar
+    del calendar, competition, teams
 
-        for week, games in calendar.items():
-            print(week)
-            for teams in games:
-                teams[0].dump()
-                teams[1].dump()
+    print('debug')
