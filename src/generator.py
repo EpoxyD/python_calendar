@@ -34,6 +34,12 @@ def generate_calendar(teamlist):
         teamlist.insert(1, teamlist.pop(-1))
     return result
 
+    # 1 2 3 4 5 6 (16 25 34 43 52 61)
+    # 1 6 2 3 4 5 (15 23 32 46 51 64)
+    # 1 5 6 2 3 4 (14 26 35 41 53 62)
+    # 1 4 5 6 2 3 (13 24 31 42 56 65)
+    # 1 3 4 5 6 2 (12 21 36 45 54 63)
+
 
 if __name__ == "__main__":
     logger.info("Parsing arguments")

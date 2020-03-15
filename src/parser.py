@@ -6,6 +6,7 @@ import csv
 import printer
 
 from objects.team import Team
+from objects.competition import Competition
 
 LOGGER = printer.get_logger()
 
@@ -60,41 +61,6 @@ def generate_output(cal):
                 })
 
 
-def get_arguments():
-    ''' return a list of csv files '''
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "files",
-        nargs='+',
-        help="one csv file per competition"
-    )
-    parser.add_argument(
-        "-r",
-        "--rounds",
-        help="Specificy how many rounds for each file (comma separated)"
-    )
-    args = parser.parse_args()
-
-    for i in range(0, len(args.files)):
-        tmp = args.files.pop(i)
-        if not '.csv' in tmp:
-            tmp += '.csv'
-        args.files.insert(i, tmp)
-
-    if args.rounds:
-        args.rounds = args.rounds.split(',')
-        if len(args.rounds) != len(args.files):
-            LOGGER.error(
-                "Specified nr of rounds mismatch with nr of csv files")
-            raise SystemExit
-    else:
-        args.rounds = list()
-        for _ in args.files:
-            args.rounds.append(2)
-
-    return args.files, args.rounds
-
-
 def parse_competitions(csv_files):
     ''' Parse all competitions from the input '''
     competitions = dict()
@@ -122,3 +88,21 @@ def parse_competitions(csv_files):
             constraints["FREE"]["MAANDAG"] = 1000
     del csv_files
     return competitions, constraints
+
+
+def parse(args):
+    ''' Return a list of competitions '''
+    competitions = list()
+    for competition in args.details:
+        comp = Competition(competition[0])
+        with open(args.file) as csv_file:
+            reader = csv.DictReader(csv_file)
+            for entry in reader:
+                if not entry["competition"] == competition[0]:
+                    continue
+                club = entry["club"]
+                name = entry["name"]
+                day = ["game_day"]
+                comp.add_team(Team(club, name, day))
+        competitions.append(comp)
+    return competitions

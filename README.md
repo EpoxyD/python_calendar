@@ -1,5 +1,13 @@
 # python_calendar
 
+## Logic
+
+- Add one single CSV containing all teams in the separate competitions
+- Parse this file into a dictionary per competition
+- Generate
+
+## Usage
+
 ### Generate Binary
 make
 

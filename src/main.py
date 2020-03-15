@@ -1,8 +1,11 @@
+import argparse
+import logging
 import random
 
-import parser as pa
+import parser
 import printer as pr
 import generator as gn
+
 import objects.team as Team
 
 constraints_list = {
@@ -133,68 +136,100 @@ def add_eindronde(cal):
         cal.append(mock_week)
 
 
+def parse_input_arguments():
+    ''' Parse CLI arguments '''
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "file",
+        help="csv file to use"
+    )
+    parser.add_argument(
+        "-c",
+        "--competitions",
+        required=True,
+        help="Competitions (comma separated)"
+    )
+    parser.add_argument(
+        "-r",
+        "--rounds",
+        required=True,
+        help="Rounds per competition (comma separated)"
+    )
+    args = parser.parse_args()
+    args.details = zip(args.competitions.split(','), args.rounds.split(','))
+    del args.rounds
+    del args.competitions
+
+    if not ".csv" in args.file:
+        logging.error("The file should be a csv file")
+        raise SystemExit
+
+    return args
+
+
 if __name__ == "__main__":
-    CSVFILE = input("What is the name of your csv file? ")
-    if ".csv" not in CSVFILE:
-        CSVFILE = CSVFILE + ".csv"
+    ARGS = parse_input_arguments()
 
-    # Get all teams from csv file
-    TEAMLIST = pa.get_teamlist(CSVFILE)
+    output = parser.parse(ARGS)
+    print("out")
 
-    # Populate Constraints list
-    populate_constraints_list(TEAMLIST)
+    # # Get all teams from csv file
+    # TEAMLIST = pa.get_teamlist(CSVFILE)
 
-    # Get list per ranking
-    TEAMLIST_1 = pa.get_teamlist_competition(TEAMLIST, "ERE")
-    TEAMLIST_2 = pa.get_teamlist_competition(TEAMLIST, "EERSTE")
+    # # Populate Constraints list
+    # populate_constraints_list(TEAMLIST)
 
-    # Remove full teamlist from memory
-    del TEAMLIST
+    # # Get list per ranking
+    # TEAMLIST_1 = pa.get_teamlist_competition(TEAMLIST, "ERE")
+    # TEAMLIST_2 = pa.get_teamlist_competition(TEAMLIST, "EERSTE")
 
-    ATTEMPTS = 0
-    NOT_DONE_YET = True
-    MAX_TRIES = 250000
-    pr.print_progress_bar(ATTEMPTS, MAX_TRIES, prefix='Progress:', suffix='')
-    while(NOT_DONE_YET):
-        ATTEMPTS += 1
+    # # Remove full teamlist from memory
+    # del TEAMLIST
 
-        # Randomnize teamlist
-        random.shuffle(TEAMLIST_1)
-        random.shuffle(TEAMLIST_2)
+    # ATTEMPTS = 0
+    # NOT_DONE_YET = True
+    # MAX_TRIES = 250000
+    # pr.print_progress_bar(ATTEMPTS, MAX_TRIES, prefix='Progress:', suffix='')
+    # while(NOT_DONE_YET):
+    #     ATTEMPTS += 1
 
-        # Create Calendar
-        CALENDAR_1 = gn.generate_calendar(TEAMLIST_1)
-        CALENDAR_2 = gn.generate_calendar(TEAMLIST_2)
+    #     # Randomnize teamlist
+    #     random.shuffle(TEAMLIST_1)
+    #     random.shuffle(TEAMLIST_2)
 
-        add_eindronde(CALENDAR_2)
+    #     # Create Calendar
+    #     CALENDAR_1 = gn.generate_calendar(TEAMLIST_1)
+    #     CALENDAR_2 = gn.generate_calendar(TEAMLIST_2)
 
-        # Make the calendars equal in length
-        fix_calendar_length(CALENDAR_1, CALENDAR_2)
+    #     add_eindronde(CALENDAR_2)
 
-        # Merge Two Calendars
-        CALENDAR = merge_calendars(CALENDAR_1, CALENDAR_2)
+    #     # Make the calendars equal in length
+    #     fix_calendar_length(CALENDAR_1, CALENDAR_2)
 
-        NOT_DONE_YET = check_constraints(CALENDAR)
+    #     # Merge Two Calendars
+    #     CALENDAR = merge_calendars(CALENDAR_1, CALENDAR_2)
 
-        pr.print_progress_bar(ATTEMPTS, MAX_TRIES,
-                              prefix='Progress:', suffix='')
+    #     NOT_DONE_YET = check_constraints(CALENDAR)
 
-        if ATTEMPTS == MAX_TRIES:
-            print("Failed to find suitable calendar within 250.000 tries.")
-            print("Are the constraints too strict?")
-            pr.print_issues(issues)
-            raise SystemExit
+    #     pr.print_progress_bar(ATTEMPTS, MAX_TRIES,
+    #                           prefix='Progress:', suffix='')
 
-    pr.print_progress_bar(MAX_TRIES, MAX_TRIES, prefix='Progress:', suffix='')
+    #     if ATTEMPTS == MAX_TRIES:
+    #         print("Failed to find suitable calendar within 250.000 tries.")
+    #         print("Are the constraints too strict?")
+    #         pr.print_issues(issues)
+    #         raise SystemExit
 
-    pr.print_header()
-    pr.print_matchweeks(CALENDAR_1)
-    pr.print_matchweeks(CALENDAR_2)
+    # pr.print_progress_bar(MAX_TRIES, MAX_TRIES, prefix='Progress:', suffix='')
 
-    pa.remove_old_output('output.csv')
+    # pr.print_header()
+    # pr.print_matchweeks(CALENDAR_1)
+    # pr.print_matchweeks(CALENDAR_2)
 
-    pa.generate_output(CALENDAR_1)
-    pa.generate_output(CALENDAR_2)
+    # pa.remove_old_output('output.csv')
 
-    print("NR OF ATTEMPTS = {}".format(ATTEMPTS))
-    input()
+    # pa.generate_output(CALENDAR_1)
+    # pa.generate_output(CALENDAR_2)
+
+    # print("NR OF ATTEMPTS = {}".format(ATTEMPTS))
+    # input()
