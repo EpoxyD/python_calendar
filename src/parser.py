@@ -1,14 +1,17 @@
+''' csv parser file '''
+
 import argparse
 import csv
+
 import printer
-import os
 
-from Team import Team
+from objects.team import Team
 
-logger = printer.get_logger()
+LOGGER = printer.get_logger()
 
 
 def get_teamlist(csv_file):
+    ''' retrieve all teams from csv '''
     teams = list()
     with open(csv_file) as file:
         reader = csv.DictReader(file)
@@ -33,17 +36,19 @@ def get_teamlist_competition(all_teams, rank):
 
 
 def remove_old_output(file):
-    with open('new_calendar.csv', 'w', newline='') as file:
+    ''' remove any old new_calendar.csv and replace with a new one '''
+    with open('new_calendar.csv', 'w', newline='') as calendar:
         fieldnames = ['week', 'day', 'comp', 'team1', 'team2', 'location']
-        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer = csv.DictWriter(calendar, fieldnames=fieldnames)
         writer.writeheader()
 
 
 def generate_output(cal):
+    ''' Write in the clean file '''
     with open('new_calendar.csv', 'a', newline='') as file:
         fieldnames = ['week', 'day', 'comp', 'team1', 'team2', 'location']
         writer = csv.DictWriter(file, fieldnames=fieldnames)
-        for i in range(len(cal)):
+        for i in enumerate(cal):
             for game in cal[i]:
                 writer.writerow({
                     'week': str(i+1),
@@ -64,7 +69,7 @@ def get_arguments():
         help="one csv file per competition"
     )
     parser.add_argument(
-        "-r", 
+        "-r",
         "--rounds",
         help="Specificy how many rounds for each file (comma separated)"
     )
@@ -75,11 +80,12 @@ def get_arguments():
         if not '.csv' in tmp:
             tmp += '.csv'
         args.files.insert(i, tmp)
-        
+
     if args.rounds:
         args.rounds = args.rounds.split(',')
         if len(args.rounds) != len(args.files):
-            logger.error("Specified nr of rounds mismatch with nr of csv files")
+            LOGGER.error(
+                "Specified nr of rounds mismatch with nr of csv files")
             raise SystemExit
     else:
         args.rounds = list()
@@ -90,11 +96,12 @@ def get_arguments():
 
 
 def parse_competitions(csv_files):
+    ''' Parse all competitions from the input '''
     competitions = dict()
     constraints = dict()
     for csv_file in csv_files:
         with open(csv_file) as file:
-            logger.info("Parse {csv_file}".format(csv_file=csv_file))
+            LOGGER.info("Parse %s", csv_file)
             reader = csv.DictReader(file)
             for entry in reader:
                 club = entry['club']

@@ -3,7 +3,7 @@ import parser
 import printer
 import random
 
-from Team import Team
+from objects.team import Team
 
 
 logger = printer.get_logger()

@@ -1,21 +1,26 @@
+''' Everything related to stdout '''
+
 import logging
 import sys
 
-logger = logging.getLogger('X')
-logger.setLevel(logging.DEBUG)
-handler = logging.StreamHandler(sys.stdout)
-handler.setLevel(logging.DEBUG)
-handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
-logger.addHandler(handler)
+LOGGER = logging.getLogger('X')
+LOGGER.setLevel(logging.DEBUG)
+HANDLER = logging.StreamHandler(sys.stdout)
+HANDLER.setLevel(logging.DEBUG)
+HANDLER.setFormatter(logging.Formatter(
+    '%(asctime)s - %(levelname)s - %(message)s'))
+LOGGER.addHandler(HANDLER)
 
 
 def get_logger():
-    global logger
-    return logger
+    ''' Retrieve the logger '''
+    global LOGGER
+    return LOGGER
 
 
 def print_header():
-    print('''
+    ''' Print header '''
+    print(r'''
          _____               _    _____        _                   _
         |  __ \             | |  / ____|      | |                 | |
         | |__) |___    ___  | | | |      __ _ | |  ___  _ __    __| |  __ _  _ __
@@ -26,10 +31,8 @@ def print_header():
                 By Evert B.
     ''')
 
-# Print iterations progress
 
-
-def printProgressBar(iteration, total, prefix='', suffix='', decimals=1, length=100, fill='█'):
+def print_progress_bar(iteration, total, prefix='', suffix=''):
     """
     Call in a loop to create terminal progress bar
     @params:
@@ -41,23 +44,27 @@ def printProgressBar(iteration, total, prefix='', suffix='', decimals=1, length=
         length      - Optional  : character length of bar (Int)
         fill        - Optional  : bar fill character (Str)
     """
+    decimals = 1
+    length = 100
+    fill = '█'
     percent = ("{0:." + str(decimals) + "f}").format(100 *
                                                      (iteration / float(total)))
-    filledLength = int(length * iteration // total)
-    bar = fill * filledLength + '-' * (length - filledLength)
-    print('\r%s |%s| %s%% %s' % (prefix, bar, percent, suffix), end='\r')
+    filled_length = int(length * iteration // total)
+    bar_icon = fill * filled_length + '-' * (length - filled_length)
+    print('\r%s |%s| %s%% %s' % (prefix, bar_icon, percent, suffix), end='\r')
     # Print New Line on Complete
     if iteration == total:
         print()
 
 
 def print_matchweeks(cal):
+    ''' Print games in a match week '''
     nr_weeks = len(cal)
     rank = cal[0][0][0].getRank()
 
     for i in range(0, nr_weeks):
         print(
-            "|--- WEEK {:2} - {:6} -------------------------------------------------------------|".format(i+1, rank))
+            "|--- WEEK {:2} - {:6} -------------------------------------|".format(i+1, rank))
         for day in cal[i]:
             print("| {:10} | {:20} VS {:20} @ {:20} |".format(
                 day[0].getDay(),
@@ -65,12 +72,13 @@ def print_matchweeks(cal):
                 day[1].getName(),
                 day[0].getClub()
             ))
-        print("|----------------------------------------------------------------------------------|".format(i))
+        print("|--------------------------------------------------------|")
         print()
     print()
 
 
 def print_issues(issues):
+    ''' Print constraint issues '''
     for club, days in issues.items():
         for day, nr_issues in days.items():
             print("Found {} issues on {} for {}".format(nr_issues, day, club))
