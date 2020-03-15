@@ -3,7 +3,7 @@ import random
 import parser as pa
 import printer as pr
 import generator as gn
-import objects.Team as Team
+import objects.team as Team
 
 constraints_list = {
     "MAANDAG": {
@@ -176,7 +176,8 @@ if __name__ == "__main__":
 
         NOT_DONE_YET = check_constraints(CALENDAR)
 
-        pr.print_progress_bar(ATTEMPTS, MAX_TRIES, prefix='Progress:', suffix='')
+        pr.print_progress_bar(ATTEMPTS, MAX_TRIES,
+                              prefix='Progress:', suffix='')
 
         if ATTEMPTS == MAX_TRIES:
             print("Failed to find suitable calendar within 250.000 tries.")
