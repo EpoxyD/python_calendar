@@ -133,68 +133,68 @@ def add_eindronde(cal):
         cal.append(mock_week)
 
 
-if __name__ == "__main__":
-    CSVFILE = input("What is the name of your csv file? ")
-    if ".csv" not in CSVFILE:
-        CSVFILE = CSVFILE + ".csv"
+# if __name__ == "__main__":
+#     CSVFILE = input("What is the name of your csv file? ")
+#     if ".csv" not in CSVFILE:
+#         CSVFILE = CSVFILE + ".csv"
 
-    # Get all teams from csv file
-    TEAMLIST = pa.get_teamlist(CSVFILE)
+#     # Get all teams from csv file
+#     TEAMLIST = pa.get_teamlist(CSVFILE)
 
-    # Populate Constraints list
-    populate_constraints_list(TEAMLIST)
+#     # Populate Constraints list
+#     populate_constraints_list(TEAMLIST)
 
-    # Get list per ranking
-    TEAMLIST_1 = pa.get_teamlist_competition(TEAMLIST, "ERE")
-    TEAMLIST_2 = pa.get_teamlist_competition(TEAMLIST, "EERSTE")
+#     # Get list per ranking
+#     TEAMLIST_1 = pa.get_teamlist_competition(TEAMLIST, "ERE")
+#     TEAMLIST_2 = pa.get_teamlist_competition(TEAMLIST, "EERSTE")
 
-    # Remove full teamlist from memory
-    del TEAMLIST
+#     # Remove full teamlist from memory
+#     del TEAMLIST
 
-    ATTEMPTS = 0
-    NOT_DONE_YET = True
-    MAX_TRIES = 250000
-    pr.print_progress_bar(ATTEMPTS, MAX_TRIES, prefix='Progress:', suffix='')
-    while(NOT_DONE_YET):
-        ATTEMPTS += 1
+#     ATTEMPTS = 0
+#     NOT_DONE_YET = True
+#     MAX_TRIES = 250000
+#     pr.print_progress_bar(ATTEMPTS, MAX_TRIES, prefix='Progress:', suffix='')
+#     while(NOT_DONE_YET):
+#         ATTEMPTS += 1
 
-        # Randomnize teamlist
-        random.shuffle(TEAMLIST_1)
-        random.shuffle(TEAMLIST_2)
+#         # Randomnize teamlist
+#         random.shuffle(TEAMLIST_1)
+#         random.shuffle(TEAMLIST_2)
 
-        # Create Calendar
-        CALENDAR_1 = gn.generate_calendar(TEAMLIST_1)
-        CALENDAR_2 = gn.generate_calendar(TEAMLIST_2)
+#         # Create Calendar
+#         CALENDAR_1 = gn.generate_calendar(TEAMLIST_1)
+#         CALENDAR_2 = gn.generate_calendar(TEAMLIST_2)
 
-        add_eindronde(CALENDAR_2)
+#         add_eindronde(CALENDAR_2)
 
-        # Make the calendars equal in length
-        fix_calendar_length(CALENDAR_1, CALENDAR_2)
+#         # Make the calendars equal in length
+#         fix_calendar_length(CALENDAR_1, CALENDAR_2)
 
-        # Merge Two Calendars
-        CALENDAR = merge_calendars(CALENDAR_1, CALENDAR_2)
+#         # Merge Two Calendars
+#         CALENDAR = merge_calendars(CALENDAR_1, CALENDAR_2)
 
-        NOT_DONE_YET = check_constraints(CALENDAR)
+#         NOT_DONE_YET = check_constraints(CALENDAR)
 
-        pr.print_progress_bar(ATTEMPTS, MAX_TRIES,
-                              prefix='Progress:', suffix='')
+#         pr.print_progress_bar(ATTEMPTS, MAX_TRIES,
+#                               prefix='Progress:', suffix='')
 
-        if ATTEMPTS == MAX_TRIES:
-            print("Failed to find suitable calendar within 250.000 tries.")
-            print("Are the constraints too strict?")
-            pr.print_issues(issues)
-            raise SystemExit
+#         if ATTEMPTS == MAX_TRIES:
+#             print("Failed to find suitable calendar within 250.000 tries.")
+#             print("Are the constraints too strict?")
+#             pr.print_issues(issues)
+#             raise SystemExit
 
-    pr.print_progress_bar(MAX_TRIES, MAX_TRIES, prefix='Progress:', suffix='')
+#     pr.print_progress_bar(MAX_TRIES, MAX_TRIES, prefix='Progress:', suffix='')
 
-    pr.print_header()
-    pr.print_matchweeks(CALENDAR_1)
-    pr.print_matchweeks(CALENDAR_2)
+#     pr.print_header()
+#     pr.print_matchweeks(CALENDAR_1)
+#     pr.print_matchweeks(CALENDAR_2)
 
-    pa.remove_old_output('output.csv')
+#     pa.remove_old_output('output.csv')
 
-    pa.generate_output(CALENDAR_1)
-    pa.generate_output(CALENDAR_2)
+#     pa.generate_output(CALENDAR_1)
+#     pa.generate_output(CALENDAR_2)
 
-    print("NR OF ATTEMPTS = {}".format(ATTEMPTS))
-    input()
+#     print("NR OF ATTEMPTS = {}".format(ATTEMPTS))
+#     input()
