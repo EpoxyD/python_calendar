@@ -6,7 +6,9 @@ import parser
 import printer as pr
 import generator as gn
 
-import objects.team as Team
+import controller
+
+import obj.team as Team
 
 constraints_list = {
     "MAANDAG": {
@@ -167,11 +169,13 @@ def parse_input_arguments():
     return args
 
 
-if __name__ == "__main__":
-    ARGS = parse_input_arguments()
+logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.DEBUG)
 
-    output = parser.parse(ARGS)
-    print("out")
+
+if __name__ == "__main__":
+    controller.start()
+
+    # ARGS = parse_input_arguments()
 
     # # Get all teams from csv file
     # TEAMLIST = pa.get_teamlist(CSVFILE)

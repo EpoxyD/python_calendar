@@ -10,13 +10,9 @@ class Team:
         self.name = name
         self.day = day
 
-    def dump(self):
-        ''' dump all data present in a Team instance '''
-        print("[{name}, {club}, {day}]".format(
-            name=self.name,
-            club=self.club,
-            day=self.day
-        ))
+    def __str__(self):
+        ''' Team tostring function '''
+        return "[ %-15s, %-20s, %-8s ]" % (self.name, self.club, self.day)
 
     def get_club(self):
         ''' Retrieve the club name '''
