@@ -1,5 +1,7 @@
+bin
+lib
+pyvenv.cfg
+
 .vscode
 *__pycache__*
 *.log
-
-tmp.py

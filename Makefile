@@ -1,3 +1,5 @@
+SHELL := /bin/bash
+
 COMPONENT=PoolCalendar
 
 all :
@@ -23,4 +25,11 @@ endif
 check:
 	@pylint ./*.py
 
-.PHONY: all clean check
+virtual-env:
+	@echo "Installing virtualenv package"
+	@python3 -m pip install virtualenv > /dev/null
+	@echo "Creating virtual environment"
+	@python3 -m virtualenv ${PWD} > /dev/null
+	@echo "source ./bin/activate"
+
+.PHONY: all clean check virtual-env
