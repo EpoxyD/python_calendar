@@ -1,5 +1,7 @@
 ''' Generate a calendar based on a number of rounds per competition '''
 
+from random import shuffle
+
 from obj.team import Team
 
 
@@ -41,24 +43,44 @@ def generate_calendar(competitions, restrictions, rounds):
 
     nr_weeks = rounds["WEEKS"]
 
+    result = dict()
     for comp in competitions:
-        result = dict()
+        calendar_home = list()
+        calendar_away = list()
         nr_teams = len(competitions[comp])
         nr_rounds = rounds[comp]
-        home = competitions[comp][:nr_teams//2]
-        away = competitions[comp][nr_teams//2:]
 
-        for i,_ in enumerate(home):
-            game_home = (home[i], away[-i])
-            game_away = (away[i], home[i])
+        for i in range(1, nr_teams):
+            game_day_home = list()
+            game_day_away = list()
+            home = competitions[comp][:nr_teams//2]
+            away = competitions[comp][nr_teams//2:]
 
-            for j in range(0, nr_rounds):
-                result["%s" % (i + j*(nr_teams//nr_rounds))] = "hello"
-                
-        competitions[comp].insert(1, competitions[comp].pop(-1))
+            for j, _ in enumerate(home):
+                if i % 2:
+                    game_day_home.append((home[j], away[-j]))
+                    game_day_away.append((away[-j], home[j]))
+                else:
+                    game_day_home.append((away[-j], home[j]))
+                    game_day_away.append((home[j], away[-j]))
 
-    # print_competitions(competitions)
-    # print_restrictions(restrictions)
+            calendar_home.append(game_day_home)
+            calendar_away.append(game_day_away)
+            competitions[comp].insert(1, competitions[comp].pop(-1))
+
+        shuffle(calendar_home)
+        shuffle(calendar_away)
+        calendar_home.extend(calendar_away)
+        result[comp] = calendar
+        break
+    return result
+
+        # for i,_ in enumerate(home):
+        #     game_home = (home[i], away[-i])
+        #     game_away = (away[i], home[i])
+
+        #     for j in range(0, nr_rounds):
+        #         result["%s" % (i + j*(nr_teams//nr_rounds))] = "hello"
 
     # result = dict()
     # tll = len(teamlist)
@@ -117,3 +139,8 @@ def generate_calendar(competitions, restrictions, rounds):
 #     # 1 5 6 2 3 4 (14 26 35 41 53 62)
 #     # 1 4 5 6 2 3 (13 24 31 42 56 65)
 #     # 1 3 4 5 6 2 (12 21 36 45 54 63)
+
+
+def generate_calendars(competitions, restrictions, rounds):
+    for competition in competitions:
+        pass
