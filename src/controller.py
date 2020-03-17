@@ -33,8 +33,8 @@ def start():
     print_competitions(competitions)
     print_restrictions(restrictions)
 
-    calendars = dict()
-    for competition in competitions:
-        calendars[competition] = generator.generate_calendar(competitions[competition], restrictions, rounds)
+    calendars = generator.generate_calendars(competitions, restrictions, rounds)
+
+    parser.parse_output(calendars)
 
     return 0

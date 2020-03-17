@@ -1,6 +1,6 @@
 ''' Generate a calendar based on a number of rounds per competition '''
 
-from random import shuffle
+from random import shuffle, randint
 
 from obj.team import Team
 
@@ -35,72 +35,29 @@ def competition_padding(competitions, rounds):
             competitions[comp].append(free_team)
 
 
-def generate_calendar(competitions, restrictions, rounds):
+def generate_calendar(competition, restrictions):
     ''' Generate a complete calendar '''
 
-    free_team = Team("FREE", "FREE", "FREE")
-    restrictions["FREE"] = {"FREE": 1000}
+    shuffle(competition)
 
-    nr_weeks = rounds["WEEKS"]
+    calendar = list()
+    nr_teams = len(competition)
 
-    result = dict()
-    for comp in competitions:
-        calendar_home = list()
-        calendar_away = list()
-        nr_teams = len(competitions[comp])
-        nr_rounds = rounds[comp]
+    for i in range(1, nr_teams):
+        game_day = list()
+        home = competition[:nr_teams//2]
+        away = competition[nr_teams//2:]
 
-        for i in range(1, nr_teams):
-            game_day_home = list()
-            game_day_away = list()
-            home = competitions[comp][:nr_teams//2]
-            away = competitions[comp][nr_teams//2:]
+        for j, _ in enumerate(home):
+            if i % 2:
+                game_day.append((home[j], away[-j]))
+            else:
+                game_day.append((away[-j], home[j]))
 
-            for j, _ in enumerate(home):
-                if i % 2:
-                    game_day_home.append((home[j], away[-j]))
-                    game_day_away.append((away[-j], home[j]))
-                else:
-                    game_day_home.append((away[-j], home[j]))
-                    game_day_away.append((home[j], away[-j]))
+        calendar.append(game_day)
+        competition.insert(1, competition.pop(-1))
 
-            calendar_home.append(game_day_home)
-            calendar_away.append(game_day_away)
-            competitions[comp].insert(1, competitions[comp].pop(-1))
-
-        shuffle(calendar_home)
-        shuffle(calendar_away)
-        calendar_home.extend(calendar_away)
-        result[comp] = calendar
-        break
-    return result
-
-        # for i,_ in enumerate(home):
-        #     game_home = (home[i], away[-i])
-        #     game_away = (away[i], home[i])
-
-        #     for j in range(0, nr_rounds):
-        #         result["%s" % (i + j*(nr_teams//nr_rounds))] = "hello"
-
-    # result = dict()
-    # tll = len(teamlist)
-    # for i in range(1, tll):
-    #     day_1 = list()
-    #     day_2 = list()
-    #     home = teamlist[:tll//2]
-    #     away = teamlist[tll//2:]
-    #     for j in range(len(home)):
-    #         if i % 2 == 0:
-    #             day_1.append((home[j], away[-j]))
-    #             day_2.append((away[-j], home[j]))
-    #         else:
-    #             day_1.append((away[-j], home[j]))
-    #             day_2.append((home[j], away[-j]))
-
-    #     result["%s" % i] = day_1
-    #     result["%s" % (i + tll//2)] = day_2
-    #     teamlist.insert(1, teamlist.pop(-1))
-    # return result
+    return calendar
 
     # 1 2 3 4 5 6 (16 25 34 43 52 61)
     # 1 6 2 3 4 5 (15 23 32 46 51 64)
@@ -109,38 +66,41 @@ def generate_calendar(competitions, restrictions, rounds):
     # 1 3 4 5 6 2 (12 21 36 45 54 63)
 
 
-# def generate_calendar(teamlist):
-#     if len(teamlist) % 2:
-#         teamlist.append(Team("FREE", "FREE", "MAANDAG"))
-#     print("Team length =", len(teamlist))
-#     random.shuffle(teamlist)
-#     result = dict()
-#     tll = len(teamlist)
-#     for i in range(1, tll):
-#         day_1 = list()
-#         day_2 = list()
-#         home = teamlist[:tll//2]
-#         away = teamlist[tll//2:]
-#         for j in range(len(home)):
-#             if i % 2 == 0:
-#                 day_1.append((home[j], away[-j]))
-#                 day_2.append((away[-j], home[j]))
-#             else:
-#                 day_1.append((away[-j], home[j]))
-#                 day_2.append((home[j], away[-j]))
+def invert_calendar(calendar):
+    for _, game_day in enumerate(calendar):
+        for j, game in enumerate(game_day):
+            game_day[j] = tuple(reversed(game))
 
-#         result["%s" % i] = day_1
-#         result["%s" % (i + tll//2)] = day_2
-#         teamlist.insert(1, teamlist.pop(-1))
-#     return result
 
-#     # 1 2 3 4 5 6 (16 25 34 43 52 61)
-#     # 1 6 2 3 4 5 (15 23 32 46 51 64)
-#     # 1 5 6 2 3 4 (14 26 35 41 53 62)
-#     # 1 4 5 6 2 3 (13 24 31 42 56 65)
-#     # 1 3 4 5 6 2 (12 21 36 45 54 63)
+def insert_free_day(calendar):
+    free_team = Team("FREE", "FREE", "FREE")
+    free_game = (free_team, free_team)
+    free_day = [free_game for _ in enumerate(calendar[0])]
+    calendar.insert(randint(0, len(calendar)-1), free_day)
 
 
 def generate_calendars(competitions, restrictions, rounds):
-    for competition in competitions:
-        pass
+    ''' Generate all calendars '''
+
+    calendars = dict()
+
+    nr_weeks = rounds["WEEKS"]
+
+    for comp in competitions:
+        calendars[comp] = list()
+
+        nr_rounds = rounds[comp]
+
+        nr_game_days = nr_rounds * (len(competitions[comp]) - 1)
+        nr_free_days = nr_weeks - nr_game_days
+
+        for i in range(0, nr_rounds):
+            calendar = generate_calendar(competitions[comp], restrictions)
+            if i % 2:
+                invert_calendar(calendar)
+            if nr_free_days:
+                insert_free_day(calendar)
+                nr_free_days -= 1
+            calendars[comp].extend(calendar)
+
+    return calendars
