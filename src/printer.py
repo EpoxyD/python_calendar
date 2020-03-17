@@ -14,7 +14,7 @@ LOGGER.addHandler(HANDLER)
 
 def get_logger():
     ''' Retrieve the logger '''
-    global LOGGER
+    global LOGGER   # pylint: disable=W0603
     return LOGGER
 
 

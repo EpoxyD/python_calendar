@@ -5,23 +5,7 @@ from random import shuffle, randint
 from obj.team import Team
 
 
-def print_competitions(competitions):
-    print("Competitions:")
-    for comp in competitions:
-        print("[", comp, "]")
-        for team in competitions[comp]:
-            print("\t-", team)
-
-
-def print_restrictions(restrictions):
-    print("Restrictions")
-    for team in restrictions:
-        print("[", team, "]")
-        for gameday, nr_tables in restrictions[team].items():
-            print("\t[ %s ] = ( %s tables )" % (gameday, nr_tables))
-
-
-def competition_padding(competitions, rounds):
+def generate_padding(competitions, rounds):
     ''' Maximize nr_teams to accomplish little constraints '''
     free_team = Team("FREE", "FREE", "FREE")
     for comp in competitions:
@@ -30,12 +14,12 @@ def competition_padding(competitions, rounds):
 
         nr_weeks = rounds["WEEKS"]
         nr_rounds = rounds[comp]
-        while(len(competitions[comp]) <= (nr_weeks / nr_rounds) - 1):
+        while len(competitions[comp]) <= (nr_weeks / nr_rounds) - 1:
             competitions[comp].append(free_team)
             competitions[comp].append(free_team)
 
 
-def generate_calendar(competition, restrictions):
+def generate_calendar(competition, restrictions): # pylint: disable=W0613
     ''' Generate a complete calendar '''
 
     shuffle(competition)
@@ -67,12 +51,14 @@ def generate_calendar(competition, restrictions):
 
 
 def invert_calendar(calendar):
+    ''' Invert all games in a calendar '''
     for _, game_day in enumerate(calendar):
         for j, game in enumerate(game_day):
             game_day[j] = tuple(reversed(game))
 
 
 def insert_free_day(calendar):
+    ''' Insert a day where all teams are available '''
     free_team = Team("FREE", "FREE", "FREE")
     free_game = (free_team, free_team)
     free_day = [free_game for _ in enumerate(calendar[0])]

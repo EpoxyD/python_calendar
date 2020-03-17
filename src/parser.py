@@ -1,16 +1,17 @@
 ''' csv parser file '''
 
-import csv
+from csv import DictReader, DictWriter
 from os import path, remove
 
 from obj.team import Team
 
 
 def parse_csv(csv_file):
+    ''' Parse a csv file containing all teams '''
     competitions = dict()
     restrictions = dict()
-    with open("csv/teams.csv") as my_file:
-        reader = csv.DictReader(my_file)
+    with open(csv_file) as my_file:
+        reader = DictReader(my_file)
         for entry in reader:
             club = entry["club_name"]
             team = entry["team_name"]
@@ -36,6 +37,7 @@ def parse_csv(csv_file):
 
 
 def parse_output(calendars):
+    ''' Parse the generated calendars to a csv file '''
     output_file = "generated_calendar.csv"
 
     if path.exists(output_file):
@@ -44,7 +46,7 @@ def parse_output(calendars):
     with open(output_file, 'w', newline='') as outputfile:
         fieldnames = ['week', 'game_day', 'competition',
                       'team_name_home', 'team_name_away', 'location']
-        writer = csv.DictWriter(outputfile, fieldnames=fieldnames)
+        writer = DictWriter(outputfile, fieldnames=fieldnames)
         writer.writeheader()
 
         for competition, calendar in calendars.items():
@@ -58,14 +60,3 @@ def parse_output(calendars):
                         'team_name_away': game[1].get_name(),
                         'location': game[0].get_club()
                     })
-
-        # for i in range(len(cal)):
-        #     for game in cal[i]:
-        #         writer.writerow({
-        #             'week': str(i+1),
-        #             'day': game[0].getDay(),
-        #             'comp': game[0].getRank(),
-        #             'team1': game[0].getName(),
-        #             'team2': game[1].getName(),
-        #             'location': game[0].getClub()
-        #         })

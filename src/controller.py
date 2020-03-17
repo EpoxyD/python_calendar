@@ -1,23 +1,7 @@
 ''' Central controller file '''
 
-import generator
-import parser
-
-
-def print_competitions(competitions):
-    print("Competitions:")
-    for comp in competitions:
-        print("[", comp, "]")
-        for team in competitions[comp]:
-            print("\t-", team)
-
-
-def print_restrictions(restrictions):
-    print("Restrictions")
-    for team in restrictions:
-        print("[", team, "]")
-        for gameday, nr_tables in restrictions[team].items():
-            print("\t[ %s ] = ( %s tables )" % (gameday, nr_tables))
+from parser import parse_csv, parse_output
+from generator import generate_padding, generate_calendars
 
 
 def start():
@@ -26,15 +10,12 @@ def start():
 
     rounds = {"WEEKS": 30, "ERE": 2, "EERSTE": 3}
 
-    competitions, restrictions = parser.parse_csv(csv_file)
+    competitions, restrictions = parse_csv(csv_file)
 
-    generator.competition_padding(competitions, rounds)
+    generate_padding(competitions, rounds)
 
-    print_competitions(competitions)
-    print_restrictions(restrictions)
+    calendars = generate_calendars(competitions, restrictions, rounds)
 
-    calendars = generator.generate_calendars(competitions, restrictions, rounds)
-
-    parser.parse_output(calendars)
+    parse_output(calendars)
 
     return 0
