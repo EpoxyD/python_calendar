@@ -1,4 +1,4 @@
-SHELL := /bin/bash
+SHELL := /bin/sh
 
 COMPONENT=PoolCalendar
 
@@ -27,9 +27,8 @@ check:
 
 virtual-env:
 	@echo "Installing virtualenv package"
-	@python3 -m pip install virtualenv > /dev/null
+	@python3 -m pip install --quiet virtualenv
 	@echo "Creating virtual environment"
-	@python3 -m virtualenv ${PWD} > /dev/null
-	@echo "source ./bin/activate"
+	@python3 -m virtualenv --quiet ${PWD}
 
 .PHONY: all clean check virtual-env
