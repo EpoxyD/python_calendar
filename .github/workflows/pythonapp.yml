@@ -5,32 +5,41 @@ name: Python application
 
 on:
   push:
-    branches: [ master, development ]
+    branches: [master, development]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
-  build:
-
+  code_check:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.8
-    - name: Install dependencies
-      run: |
-        ls -lah
-        python3 -m pip install --upgrade pip
-        python3 -m pip install -r requirements.txt
-    - name: Lint with pylint
-      if: always()
-      run: |
-        python3 -m pip install pylint
-        python3 -m pylint src/
-    - name: Test with pytest
-      run: |
-        python3 -m pip install pytest
-        python3 -m pytest .
+      - name: checkout repository
+        uses: actions/checkout@v2
+      - name: setup python
+        uses: actions/setup-python@v1
+      - name: setup pyline
+        run: python3 -m pip install pylint
+      - name: run pylint
+        run: python3 -m pylint src/*
+  # build:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Set up Python 3.8
+  #     uses: actions/setup-python@v1
+  #     with:
+  #       python-version: 3.8
+  #   - name: Install dependencies
+  #     run: |
+  #       ls -lah
+  #       python3 -m pip install --upgrade pip
+  #       python3 -m pip install -r requirements.txt
+  #   - name: Lint with pylint
+  #     if: always()
+  #     run: |
+  #       python3 -m pip install pylint
+  #       python3 -m pylint src/
+  #   - name: Test with pytest
+  #     run: |
+  #       python3 -m pip install pytest
+  #       python3 -m pytest .
