@@ -21,25 +21,3 @@ jobs:
         run: python3 -m pip install pylint
       - name: run pylint
         run: python3 -m pylint  --rcfile=.github/.pylintrc src/*.py
-  # build:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - name: Set up Python 3.8
-  #     uses: actions/setup-python@v1
-  #     with:
-  #       python-version: 3.8
-  #   - name: Install dependencies
-  #     run: |
-  #       ls -lah
-  #       python3 -m pip install --upgrade pip
-  #       python3 -m pip install -r requirements.txt
-  #   - name: Lint with pylint
-  #     if: always()
-  #     run: |
-  #       python3 -m pip install pylint
-  #       python3 -m pylint src/
-  #   - name: Test with pytest
-  #     run: |
-  #       python3 -m pip install pytest
-  #       python3 -m pytest .
