@@ -20,7 +20,7 @@ jobs:
       - name: setup pyline
         run: python3 -m pip install pylint
       - name: run pylint
-        run: python3 -m pylint src/*
+        run: python3 -m pylint  --rcfile=.github/.pylintrc src/*.py
   # build:
   #   runs-on: ubuntu-latest
   #   steps:
