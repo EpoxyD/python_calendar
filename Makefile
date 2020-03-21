@@ -1,34 +1,30 @@
-SHELL := /bin/sh
+COMPONENT=calendar_generator
 
-COMPONENT=PoolCalendar
+all : dependencies
+	@ python -m pip install fbs
 
-all :
-	@echo "Generating binary"
-	@mkdir -p output
-	@pyinstaller -c -F -i src/pool.ico -n $(COMPONENT) --log-level ERROR --distpath output src/main.py
-	@echo "Removing temporary files"
+run: dependencies
+	@ python src/main.py
+
+gui: dependencies
+	@ python src/gui/main.py
+
+build: dependencies
+	@ python -m pip install fbs
+
+dependencies:
+	@ python -m pip install --upgrade pip
+	@ python -m pip install -r .\requirements.txt
+
+start: 
+	@ python -m venv $(CURDIR)
 ifeq ($(OS),Windows_NT)
-	@RD /S/Q build > nul 2>&1
-	@DEL /F/S/Q $(COMPONENT).spec > nul 2>&1
+	@ echo enable development enviroment with: ./Scripts/Activate.ps1 (Powershell)
 else
-	@rm -rf build $(COMPONENT).spec
+	@ echo enable development enviroment with: source ./bin/activate (bash)
 endif
-	@echo "RUN ./$(COMPONENT)"
 
 clean:
-ifeq ($(OS),Windows_NT)
-	@DEL /F/S/Q $(COMPONENT).exe > nul 2>&1
-else
-	@rm -rf $(COMPONENT) **/__pycache__
-endif
+	@ git clean -fd
 
-check:
-	@pylint ./*.py
-
-virtual-env:
-	@echo "Installing virtualenv package"
-	@python3 -m pip install --quiet virtualenv
-	@echo "Creating virtual environment"
-	@python3 -m virtualenv --quiet ${PWD}
-
-.PHONY: all clean check virtual-env
+.PHONY: all clean dependencies start run gui

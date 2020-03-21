@@ -1,7 +1,11 @@
 bin
 lib
+Lib
+Scripts
 pyvenv.cfg
 
 .vscode
 *__pycache__*
 *.log
+
+generated_calendar.csv

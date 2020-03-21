@@ -1,7 +1,7 @@
 ''' Central controller file '''
 
-from src.cal_parser import parse_csv, parse_output
-from src.cal_generator import generate_padding, generate_calendars
+from src.main.python.cal_parser import parse_csv, parse_output
+from src.main.python.cal_generator import generate_padding, generate_calendars
 
 
 def start():
@@ -19,3 +19,7 @@ def start():
     parse_output(calendars)
 
     return 0
+
+
+if __name__ == "__main__":
+    start()

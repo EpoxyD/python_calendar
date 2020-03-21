@@ -5,9 +5,10 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout
 from PyQt5.QtGui import QIcon, QPixmap
 
-from src.gui.modules import CSVSelectModule, GenerateModule, TeamsModule
+from src.main.python.gui.modules import CSVSelectModule, GenerateModule, TeamsModule
 
-class MainScreen(QWidget):
+
+class MainWindow(QWidget):
     ''' Create the main window '''
 
     def __init__(self):
@@ -22,10 +23,3 @@ class MainScreen(QWidget):
         self.layout.addWidget(CSVSelectModule(self), stretch=1)
         self.layout.addWidget(TeamsModule(self), stretch=3)
         self.layout.addWidget(GenerateModule(self), stretch=1)
-
-
-if __name__ == "__main__":
-    WINDOW = QApplication(sys.argv)
-    APP = MainScreen()
-    APP.show()
-    sys.exit(WINDOW.exec_())

@@ -10,7 +10,7 @@ class CSVSelectModule(QGroupBox):
 
     def __init__(self, parent):
         super().__init__()
-
+        
         self.setTitle("CSV file:")
 
         csv_layout = QHBoxLayout()
@@ -38,7 +38,6 @@ class CSVSelectModule(QGroupBox):
             options=options)
         if filename:
             self.csv_line_edit.setText(filename)
-            print(filename)
 
 
 class TeamsModule(QGroupBox):

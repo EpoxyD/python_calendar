@@ -3,7 +3,7 @@
 from csv import DictReader, DictWriter
 from os import path, remove
 
-from src.obj.team import Team
+from src.main.python.team import Team
 
 
 def parse_csv(csv_file):
@@ -49,14 +49,14 @@ def parse_output(calendars):
         writer = DictWriter(outputfile, fieldnames=fieldnames)
         writer.writeheader()
 
-    for competition, calendar in calendars.items():
-        for week_nr, game_day in enumerate(calendar):
-            for _, game in enumerate(game_day):
-                writer.writerow({
-                    'week': str(week_nr+1),
-                    'game_day': game[0].get_day(),
-                    'competition': competition,
-                    'team_name_home': game[0].get_name(),
-                    'team_name_away': game[1].get_name(),
-                    'location': game[0].get_club()
-                })
+        for competition, calendar in calendars.items():
+            for week_nr, game_day in enumerate(calendar):
+                for _, game in enumerate(game_day):
+                    writer.writerow({
+                        'week': str(week_nr+1),
+                        'game_day': game[0].get_day(),
+                        'competition': competition,
+                        'team_name_home': game[0].get_name(),
+                        'team_name_away': game[1].get_name(),
+                        'location': game[0].get_club()
+                    })
