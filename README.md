@@ -1,5 +1,15 @@
 # python_calendar
 
+![Python application](https://github.com/EpoxyD/python_calendar/workflows/Python%20application/badge.svg)
+
+## Logic
+
+- Add one single CSV containing all teams in the separate competitions
+- Parse this file into a dictionary per competition
+- Generate
+
+## Usage
+
 ### Generate Binary
 make
 

@@ -1,0 +1,23 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Python application
+
+on:
+  push:
+    branches: [master, development]
+  pull_request:
+    branches: [master]
+
+jobs:
+  code_check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v2
+      - name: setup python
+        uses: actions/setup-python@v1
+      - name: setup pyline
+        run: python3 -m pip install pylint
+      - name: run pylint
+        run: python3 -m pylint  --rcfile=.github/.pylintrc src/*.py
