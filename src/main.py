@@ -2,7 +2,7 @@
 
 import logging
 
-from controller import start
+from src.cal_controller import start
 
 logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.DEBUG)
 
