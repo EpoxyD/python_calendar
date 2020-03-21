@@ -6,7 +6,7 @@ from os import path, remove
 from obj.team import Team
 
 
-def parse_csv(csv_file):
+def parse_csv_test(csv_file):
     ''' Parse a csv file containing all teams '''
     competitions = dict()
     restrictions = dict()

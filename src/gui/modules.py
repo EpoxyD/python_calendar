@@ -1,6 +1,7 @@
 ''' csv module in main window '''
 
-from PyQt5.QtWidgets import QFileDialog, QGridLayout, QGroupBox, QHBoxLayout, QLineEdit, QPushButton, QSpacerItem, QTextEdit, QWidget
+from PyQt5.QtWidgets import QFileDialog, QGridLayout, QGroupBox, QHBoxLayout
+from PyQt5.QtWidgets import QLineEdit, QPushButton, QTextEdit
 from PyQt5.QtCore import pyqtSlot
 
 
