@@ -1,9 +1,9 @@
 ''' Generate Module '''
 
-from PyQt5.QtWidgets import QHBoxLayout, QPushButton, QWidget
+from PyQt5.QtWidgets import QHBoxLayout, QPushButton, QWidget, QTextBrowser
 
 
-class GenerateModule(QWidget):
+class GenerateButton(QWidget):
     ''' Add the generate Button '''
 
     def __init__(self, parent):

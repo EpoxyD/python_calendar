@@ -4,8 +4,8 @@ all : dependencies
 	@ fbs run
 
 dependencies:
-	@ python -m pip install --upgrade pip
-	@ python -m pip install -r ./requirements.txt
+	@ python -m pip install --quiet --upgrade pip
+	@ python -m pip install --quiet -r ./requirements.txt
 
 clean:
 	@ git clean -fdx

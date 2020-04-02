@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QFileDialog, QHBoxLayout, QLineEdit, QPushButton, QG
 from PyQt5.QtCore import pyqtSlot
 
 
-class CSVModule(QGroupBox):
+class CSVInput(QGroupBox):
     ''' Create the CSV file module '''
 
     def __init__(self, parent):
