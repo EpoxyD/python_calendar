@@ -1,8 +1,4 @@
-bin
-lib
-Lib
-Scripts
-pyvenv.cfg
+target
 
 .vscode
 *__pycache__*
