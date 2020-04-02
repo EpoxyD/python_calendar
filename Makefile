@@ -1,7 +1,6 @@
 COMPONENT=calendar_generator
 
 all : dependencies
-	@ python -m pip install fbs
 	@ fbs run
 
 dependencies:
