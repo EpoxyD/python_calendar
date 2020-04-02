@@ -3,7 +3,7 @@
 from csv import DictReader, DictWriter
 from os import path, remove
 
-from src.main.python.team import Team
+from team import Team
 
 
 def parse_csv(csv_file):

@@ -6,11 +6,11 @@ from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout, QMessageBox
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import pyqtSlot
 
-from src.main.python.gui.csvmodule import CSVModule
-from src.main.python.gui.generatemodule import GenerateModule
-from src.main.python.gui.datamodule import DataModule
+from gui.csvmodule import CSVModule
+from gui.generatemodule import GenerateModule
+from gui.datamodule import DataModule
 
-from src.main.python.cal_controller import parse_csv
+from cal_controller import parse_csv
 
 
 class MainWindow(QWidget):

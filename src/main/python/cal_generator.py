@@ -2,7 +2,7 @@
 
 from random import shuffle, randint
 
-from src.main.python.team import Team
+from team import Team
 
 
 def generate_padding(competitions, rounds):
