@@ -1,16 +1,13 @@
 ''' Frontend window '''
 
-import sys
+from PyQt5.QtWidgets import QWidget, QGridLayout
 
-from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout, QMessageBox
-from PyQt5.QtGui import QIcon, QPixmap
-from PyQt5.QtCore import pyqtSlot
+from gui.csv_input import CSVInput
+from gui.competition_list import CompetitionList
+from gui.team_list import TeamList
+from gui.generate_button import GenerateButton
 
-from gui.csvmodule import CSVModule
-from gui.generatemodule import GenerateModule
-from gui.datamodule import DataModule
-
-from cal_controller import parse_csv
+from cal_controller import Controller
 
 
 class MainWindow(QWidget):
@@ -19,15 +16,22 @@ class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Calendar Generator")
-        self.setFixedSize(600, 300)
+        self.setFixedSize(600, 400)
+
+        Controller.parentWidget = self
 
         self.setLayout(QGridLayout())
-        self.layout().addWidget(CSVModule(self), 1, 1, 1, 2)
-        self.layout().addWidget(DataModule(self, "Competitions"), 2, 1, 3, 1)
-        self.layout().addWidget(DataModule(self, "Teams"), 2, 2, 3, 1)
-        self.layout().addWidget(GenerateModule(self), 5, 1, 1, 2)
 
-    @pyqtSlot()
+        self.csv_input = CSVInput(self)
+        self.comp_list = CompetitionList(self)
+        self.team_list = TeamList(self)
+        self.gen_button = GenerateButton(self)
+
+        self.layout().addWidget(self.csv_input, 1, 1, 1, 2)
+        self.layout().addWidget(self.comp_list, 2, 1, 2, 2)
+        self.layout().addWidget(self.team_list, 4, 1, 2, 2)
+        self.layout().addWidget(self.gen_button, 6, 1, 1, 2)
+
     def update_competitions(self):
-        print("update competitions")
-        parse_csv(self.findChild())
+        """ Update the competitions windows """
+        self.comp_list.update()

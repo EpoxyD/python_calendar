@@ -1,11 +1,13 @@
 COMPONENT=calendar_generator
 
+PYTHON=python3
+
 all : dependencies
 	@ fbs run
 
 dependencies:
-	@ python -m pip install --upgrade pip
-	@ python -m pip install -r ./requirements.txt
+	@ ${PYTHON} -m pip install --quiet --upgrade pip
+	@ ${PYTHON} -m pip install --quiet -r ./requirements.txt
 
 clean:
 	@ git clean -fdx

@@ -3,8 +3,10 @@
 from PyQt5.QtWidgets import QFileDialog, QHBoxLayout, QLineEdit, QPushButton, QGroupBox
 from PyQt5.QtCore import pyqtSlot
 
+from cal_controller import Controller
 
-class CSVModule(QGroupBox):
+
+class CSVInput(QGroupBox):
     ''' Create the CSV file module '''
 
     def __init__(self, parent):
@@ -37,3 +39,6 @@ class CSVModule(QGroupBox):
             options=options)
         if filename:
             self.csv_text.setText(filename)
+            Controller.get().parse_csv_file(filename)
+            self.parentWidget().update_competitions()
+            # Controller.get().updateCompetitions
