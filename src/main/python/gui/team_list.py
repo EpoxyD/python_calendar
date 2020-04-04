@@ -1,5 +1,5 @@
 ''' Teams module '''
-from PyQt5.QtWidgets import QBoxLayout, QGridLayout, QGroupBox, QHBoxLayout, QListWidget, QListWidgetItem, QTextBrowser, QWidget
+from PyQt5.QtWidgets import QHBoxLayout, QListWidget, QGroupBox
 
 
 class TeamList(QGroupBox):
@@ -7,6 +7,8 @@ class TeamList(QGroupBox):
 
     def __init__(self, parent):
         super().__init__()
+
+        self.parent = parent
 
         self.setTitle("Teams in selected competition")
         self.setLayout(QHBoxLayout())

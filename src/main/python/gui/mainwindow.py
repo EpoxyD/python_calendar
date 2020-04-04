@@ -33,5 +33,5 @@ class MainWindow(QWidget):
         self.layout().addWidget(self.gen_button, 6, 1, 1, 2)
 
     def update_competitions(self):
-        print("update competitions")
+        """ Update the competitions windows """
         self.comp_list.update()

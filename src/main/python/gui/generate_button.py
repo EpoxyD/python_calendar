@@ -1,7 +1,6 @@
 ''' Generate Module '''
 
 from PyQt5.QtWidgets import QHBoxLayout, QPushButton, QWidget
-from PyQt5.QtCore import pyqtSlot
 
 
 class GenerateButton(QWidget):
