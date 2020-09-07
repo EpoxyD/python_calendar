@@ -2,19 +2,14 @@
 
 ![Python application](https://github.com/EpoxyD/python_calendar/workflows/Python%20application/badge.svg)
 
-## Logic
+## General
 
-- Add one single CSV containing all teams in the separate competitions
-- Parse this file into a dictionary per competition
-- Generate
+Load a CSV file and generate a random calendar from the input fields in a round-robin fashion.
+The resulting calendar will be output as a CSV file on its own.
 
 ## Usage
 
-### Generate Binary
-
-make
-
-### Enter teams
+### Enter teams in the CSV file
 
 Update teams.csv to your own desire
 
