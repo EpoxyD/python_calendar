@@ -5,49 +5,39 @@ from random import shuffle, randint
 from team import Team
 
 
-def generate_padding(competitions, rounds):
-    ''' Maximize nr_teams to accomplish little constraints '''
-    free_team = Team("FREE", "FREE", "FREE")
-    for comp in competitions:
-        if len(competitions[comp]) % 2:
-            competitions[comp].append(free_team)
-
-        nr_weeks = rounds["WEEKS"]
-        nr_rounds = rounds[comp]
-        while len(competitions[comp]) <= (nr_weeks / nr_rounds) - 1:
-            competitions[comp].append(free_team)
-            competitions[comp].append(free_team)
 
 
-def generate_calendar(competition, _restrictions):
+def generate_calendar(data):
     ''' Generate a complete calendar '''
 
-    shuffle(competition)
+    # Find the amount of weeks
 
-    calendar = list()
-    nr_teams = len(competition)
+    # shuffle(competition)
 
-    for i in range(1, nr_teams):
-        game_day = list()
-        home = competition[:nr_teams//2]
-        away = competition[nr_teams//2:]
+    # calendar = list()
+    # nr_teams = len(competition)
 
-        for j, _ in enumerate(home):
-            if i % 2:
-                game_day.append((home[j], away[-j]))
-            else:
-                game_day.append((away[-j], home[j]))
+    # for i in range(1, nr_teams):
+    #     game_day = list()
+    #     home = competition[:nr_teams//2]
+    #     away = competition[nr_teams//2:]
 
-        calendar.append(game_day)
-        competition.insert(1, competition.pop(-1))
+    #     for j, _ in enumerate(home):
+    #         if i % 2:
+    #             game_day.append((home[j], away[-j]))
+    #         else:
+    #             game_day.append((away[-j], home[j]))
 
-    return calendar
+    #     calendar.append(game_day)
+    #     competition.insert(1, competition.pop(-1))
 
-    # 1 2 3 4 5 6 (16 25 34 43 52 61)
-    # 1 6 2 3 4 5 (15 23 32 46 51 64)
-    # 1 5 6 2 3 4 (14 26 35 41 53 62)
-    # 1 4 5 6 2 3 (13 24 31 42 56 65)
-    # 1 3 4 5 6 2 (12 21 36 45 54 63)
+    # return calendar
+
+    # # 1 2 3 4 5 6 (16 25 34 43 52 61)
+    # # 1 6 2 3 4 5 (15 23 32 46 51 64)
+    # # 1 5 6 2 3 4 (14 26 35 41 53 62)
+    # # 1 4 5 6 2 3 (13 24 31 42 56 65)
+    # # 1 3 4 5 6 2 (12 21 36 45 54 63)
 
 
 def invert_calendar(calendar):

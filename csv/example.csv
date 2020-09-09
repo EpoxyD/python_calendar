@@ -1,18 +1,18 @@
-club,team,division,tables,matchday
-Pottenpakkers,POP A,ERE,2,WOENSDAG
-Pottenpakkers,POP B,ERE,2,WOENSDAG
-Pottenpakkers,POP C,EERSTE,2,WOENSDAG
-Pottenpakkers,POP D,EERSTE,2,WOENSDAG
-Uptown Fluke,UTF A,ERE,2,MAANDAG
-Uptown Fluke,UTF B,ERE,2,WOENSDAG
-Uptown Fluke,UTF C,ERE,2,MAANDAG
-Uptown Fluke,UTF D,ERE,2,MAANDAG
-Uptown Fluke,UTF E,EERSTE,2,WOENSDAG
-Poolios,PIO A,ERE,1,WOENSDAG
-Black Beauty,BLB A,ERE,2,WOENSDAG
-Black Beauty,BLB B,EERSTE,2,MAANDAG
-Black Beauty,BLB C,EERSTE,2,WOENSDAG
-Black Beauty,BLB D,EERSTE,2,MAANDAG
-Black Beauty,BLB E,EERSTE,2,MAANDAG
-Jumperboys,JPB A,ERE,1,WOENSDAG
-Jumperboys,JPB B,EERSTE,1,WOENSDAG
+club,team,division,tables,matchday,rounds
+Pottenpakkers,POP A,ERE,2,WOENSDAG,2
+Pottenpakkers,POP B,ERE,2,WOENSDAG,2
+Pottenpakkers,POP C,EERSTE,2,WOENSDAG,2
+Pottenpakkers,POP D,EERSTE,2,WOENSDAG,2
+Uptown Fluke,UTF A,ERE,2,MAANDAG,2
+Uptown Fluke,UTF B,ERE,2,WOENSDAG,2
+Uptown Fluke,UTF C,ERE,2,MAANDAG,2
+Uptown Fluke,UTF D,ERE,2,MAANDAG,2
+Uptown Fluke,UTF E,EERSTE,2,WOENSDAG,2
+Poolios,PIO A,ERE,1,WOENSDAG,2
+Black Beauty,BLB A,ERE,2,WOENSDAG,2
+Black Beauty,BLB B,EERSTE,2,MAANDAG,2
+Black Beauty,BLB C,EERSTE,2,WOENSDAG,2
+Black Beauty,BLB D,EERSTE,2,MAANDAG,2
+Black Beauty,BLB E,EERSTE,2,MAANDAG,2
+Jumperboys,JPB A,ERE,1,WOENSDAG,2
+Jumperboys,JPB B,EERSTE,1,WOENSDAG,2
